@@ -1,35 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   codexion.c                                         :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/20 14:24:24 by inaciri           #+#    #+#             */
-/*   Updated: 2026/04/20 15:26:53 by inaciri          ###   ########.fr       */
+/*   Created: 2026/04/20 15:28:32 by inaciri           #+#    #+#             */
+/*   Updated: 2026/04/20 15:28:51 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "codexion.h"
+#include "../codexion.h"
 
-int	main(int argc, char **argv)
-{	char	*data;
-	int		scheduler;
+size_t	ft_strlen(const char *s)
+{
+	int	i;
 
-	data = malloc(9 * sizeof(int));
-	if (!data)
-	{
-		free(data);
+	if (!s)
 		return (0);
-	}
-	scheduler = -1;
-	if (argc < 9)
-	{
-		printf("Missing arguments");
-		return (0);
-	}
-	scheduler = ft_parcing(data, argv);
-	printf("scheduler: %d\n", scheduler);
-	if (scheduler == -1)
-		return (0);
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
 }

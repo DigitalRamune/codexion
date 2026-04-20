@@ -1,33 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parcing.c                                          :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/20 14:25:43 by inaciri           #+#    #+#             */
-/*   Updated: 2026/04/20 15:36:20 by inaciri          ###   ########.fr       */
+/*   Created: 2026/04/20 14:41:05 by inaciri           #+#    #+#             */
+/*   Updated: 2026/04/20 14:41:50 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "codexion.h"
+#include "../codexion.h"
 
-int	ft_parcing(char *data, char **argv)
+int	ft_atoi(const char *str)
 {
-	int	i;
+	char	*tempstr;
+	int		neg;
+	int		i;
+	int		res;
 
+	res = 0;
+	tempstr = (char *)str;
 	i = 0;
-	while (i < 7)
-	{
-		data[i] = ft_atoi(argv[i + 1]);
-		printf("%d\n", data[i]);
+	neg = 1;
+	while ((tempstr[i] >= 8 && tempstr[i] <= 13) || tempstr[i] == 32)
 		i++;
-		printf("i = %d\n", i);
+	if (tempstr[i] == '-' || tempstr[i] == '+')
+	{
+		if (tempstr[i] == '-')
+			neg = neg * -1;
+		i++;
 	}
-	if (ft_strcmp(argv[8], "fifo") == 0)
-		return (0);
-	else if (ft_strcmp(argv[8], "edf") == 0)
-		return (1);
-	else
-		return (-1);
+	while (tempstr[i] >= '0' && tempstr[i] <= '9')
+	{
+		res = res * 10 + (tempstr[i] - '0');
+		i++;
+	}
+	return (res * neg);
 }

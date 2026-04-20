@@ -1,35 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   codexion.c                                         :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/20 14:24:24 by inaciri           #+#    #+#             */
-/*   Updated: 2026/04/20 15:26:53 by inaciri          ###   ########.fr       */
+/*   Created: 2026/04/20 15:30:16 by inaciri           #+#    #+#             */
+/*   Updated: 2026/04/20 15:39:26 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "codexion.h"
+#include "../codexion.h"
 
-int	main(int argc, char **argv)
-{	char	*data;
-	int		scheduler;
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	unsigned int	i;
+	int				minus;
 
-	data = malloc(9 * sizeof(int));
-	if (!data)
+	i = 0;
+	minus = 0;
+	if (!s1 || !s2)
+		return (-1);
+	if (ft_strlen(s1) != ft_strlen(s2))
+		return (-1);
+	while (s1[i] && s2[i])
 	{
-		free(data);
-		return (0);
+		minus = (unsigned char)s1[i] - (unsigned char)s2[i];
+		if (minus != 0)
+			break ;
+		i++;
 	}
-	scheduler = -1;
-	if (argc < 9)
-	{
-		printf("Missing arguments");
-		return (0);
-	}
-	scheduler = ft_parcing(data, argv);
-	printf("scheduler: %d\n", scheduler);
-	if (scheduler == -1)
-		return (0);
+	return (minus);
 }
