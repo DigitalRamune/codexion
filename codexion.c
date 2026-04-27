@@ -6,30 +6,51 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:24:24 by inaciri           #+#    #+#             */
-/*   Updated: 2026/04/20 15:26:53 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/04/27 15:16:50 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+#include <sys/time.h>
+
+void* coders_step(void* argument)
+{
+	struct timeval tv_now;
+	struct timeval *tv_start;
+
+	tv_start = (struct timeval *)argument;
+	gettimeofday(&tv_now, NULL);
+	printf("Temps passe depuis le debut: %ldms\n", (tv_now.tv_usec - (tv_start->tv_usec)));
+	return NULL;
+}
 
 int	main(int argc, char **argv)
-{	char	*data;
-	int		scheduler;
+{
+	// Validation nbr of coders
+	int	coders;
+	int	i;
 
-	data = malloc(9 * sizeof(int));
-	if (!data)
+	struct timeval tv_start;
+	gettimeofday(&tv_start, NULL);
+	
+	coders = atoi(argv[1]);
+	(void) argc;
+	if (coders <= 0)
 	{
-		free(data);
-		return (0);
+		printf("Please enter a valid number of coders\n");
+		return 0;
 	}
-	scheduler = -1;
-	if (argc < 9)
+	// --------------------------
+
+	pthread_t code[coders];
+	i = 0;
+	while (i < coders)
 	{
-		printf("Missing arguments");
-		return (0);
+		pthread_create(&code[i], NULL, coders_step, &tv_start);
+		pthread_join(code[i], NULL);
+		i++;
 	}
-	scheduler = ft_parcing(data, argv);
-	printf("scheduler: %d\n", scheduler);
-	if (scheduler == -1)
-		return (0);
 }

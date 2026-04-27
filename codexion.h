@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:30:49 by inaciri           #+#    #+#             */
-/*   Updated: 2026/04/20 15:31:25 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/04/23 15:34:28 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,6 @@
 # include <string.h>
 # include <unistd.h>
 
-int		ft_parcing(char *data, char **argv);
-int		ft_atoi(const char *str);
-size_t	ft_strlen(const char *s);
-int		ft_strcmp(const char *s1, const char *s2);
+int		ft_parsing(char *data, char **argv);
 
 #endif

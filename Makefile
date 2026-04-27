@@ -6,7 +6,7 @@
 #    By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/04/20 14:22:45 by inaciri           #+#    #+#              #
-#    Updated: 2026/04/20 15:33:14 by inaciri          ###   ########.fr        #
+#    Updated: 2026/04/27 11:48:17 by inaciri          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,10 +15,6 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
 SRCS = codexion.c \
-	parcing.c \
-	tools/ft_atoi.c \
-	tools/ft_strlen.c \
-	tools/ft_strcmp.c
 
 OBJS := ${SRCS:.c=.o}
 
