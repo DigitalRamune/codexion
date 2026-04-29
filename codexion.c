@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:24:24 by inaciri           #+#    #+#             */
-/*   Updated: 2026/04/28 18:32:44 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/04/29 14:57:05 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,32 @@
 
 struct Code_data {
 	int				id;
+	int				dongles;
 	struct timeval	tv_last;
 	struct timeval	tv_start;
 };
 
 void* coders_step(void* argument)
 {
-	struct timeval tv_now;
-	struct Code_data *self_data;
+	struct timeval		tv_now;
+	struct Code_data	*self_data;
+	int					i;
 
 	self_data = (struct Code_data *)argument;
+	i = 0;
+	while (i < self_data->dongles)
+	{
+		gettimeofday(&tv_now, NULL);
+		printf("%ld %d has taken a dongle\n", (tv_now.tv_usec - self_data->tv_start.tv_usec), self_data->id);
+		i++;
+	}
 	gettimeofday(&tv_now, NULL);
 	self_data->tv_last = tv_now;
-	printf("Temps passe depuis le debut: %ldms\n", (self_data->tv_last.tv_usec - (self_data->tv_start.tv_usec)));
-	printf("Le thread %d a fini l'execution a %ldms\n", self_data->id, self_data->tv_last.tv_usec);
+	printf("%ld %d is compiling\n", (self_data->tv_last.tv_usec - (self_data->tv_start.tv_usec)), self_data->id);
+	gettimeofday(&tv_now, NULL);
+	printf("%ld %d is debugging\n", (tv_now.tv_usec - (self_data->tv_start.tv_usec)), self_data->id);
+	gettimeofday(&tv_now, NULL);
+	printf("%ld %d is refactoring\n", (tv_now.tv_usec - (self_data->tv_start.tv_usec)), self_data->id);
 	return NULL;
 }
 
@@ -44,7 +56,6 @@ int	main(int argc, char **argv)
 	struct timeval		tv;
 	pthread_t			*code_threads;
 	
-	gettimeofday(&tv, NULL);
 	nbr_coders = atoi(argv[1]);
 	(void) argc;
 	if (nbr_coders <= 0)
@@ -62,10 +73,15 @@ int	main(int argc, char **argv)
 		return 0;
 	}
 	i = 0;
+	gettimeofday(&tv, NULL);
 	while (i < nbr_coders)
 	{
-		all_code[i].id = i;
+		all_code[i].id = i + 1;
 		all_code[i].tv_start = tv;
+		if (nbr_coders == 1)
+			all_code[i].dongles = 1;
+		else
+			all_code[i].dongles = 2;
 		pthread_create(&code_threads[i], NULL, coders_step, &all_code[i]);
 		pthread_join(code_threads[i], NULL);
 		i++;
