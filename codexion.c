@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:24:24 by inaciri           #+#    #+#             */
-/*   Updated: 2026/04/29 14:57:05 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/04/29 17:57:47 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,64 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <sys/time.h>
+#include <unistd.h>
 
 struct Code_data {
 	int				id;
 	int				dongles;
+	int				comp_time;
+	int				debug_time;
+	int				ref_time;
+	int				burn_time;
 	struct timeval	tv_last;
 	struct timeval	tv_start;
 };
+
+void	argument_names(char **arg_tab)
+{
+	arg_tab[0] = "number of coders";
+	arg_tab[1] = "time to burn";
+	arg_tab[2] = "time to compile";
+	arg_tab[3] = "time to debug";
+	arg_tab[4] = "time to refactor";
+	arg_tab[5] = "number of required compilations";
+	arg_tab[6] = "dongle cooldown";
+	arg_tab[7] = "scheduler";
+}
+
+int	valid_data(int *data, int argc, char **argv)
+{
+	int i;
+	char *arg_name[8];
+	
+	argument_names(arg_name);
+	i = 0;
+	if (argc < 9 || argc > 9)
+	{
+		printf("Invalid number of arguments given\n");
+		return 0;
+	}
+	while (i < 7)
+	{
+		data[i] = atoi(argv[i + 1]);
+		if (data[i] == 0)
+		{
+			printf("Invalid %s\n", arg_name[i]);
+			return 0;
+		}
+		i++;
+	}
+	if (!strcmp(argv[8], "FIFO"))
+		data[i] = 0;
+	else if (!strcmp(argv[8], "EDF"))
+		data[i] = 1;
+	else
+	{
+		printf("Invalid %s\n", arg_name[i]);
+		return 0;		
+	}
+	return 1;
+}
 
 void* coders_step(void* argument)
 {
@@ -49,24 +100,18 @@ void* coders_step(void* argument)
 
 int	main(int argc, char **argv)
 {
-	// Validation nbr of coders
-	int					nbr_coders;
 	int					i;
 	struct Code_data	*all_code;
 	struct timeval		tv;
 	pthread_t			*code_threads;
-	
-	nbr_coders = atoi(argv[1]);
-	(void) argc;
-	if (nbr_coders <= 0)
-	{
-		printf("Please enter a valid number of coders\n");
+	int					args[8];
+
+	if (!valid_data(args, argc, argv))
 		return 0;
-	}
 	// --------------------------
 
-	all_code = malloc(nbr_coders * sizeof(struct Code_data));
-	code_threads = malloc(nbr_coders * sizeof(pthread_t));
+	all_code = malloc(args[0] * sizeof(struct Code_data));
+	code_threads = malloc(args[0] * sizeof(pthread_t));
 	if (!all_code)
 	{
 		free(all_code);
@@ -74,11 +119,11 @@ int	main(int argc, char **argv)
 	}
 	i = 0;
 	gettimeofday(&tv, NULL);
-	while (i < nbr_coders)
+	while (i < args[0])
 	{
 		all_code[i].id = i + 1;
 		all_code[i].tv_start = tv;
-		if (nbr_coders == 1)
+		if (args[0] == 1)
 			all_code[i].dongles = 1;
 		else
 			all_code[i].dongles = 2;
