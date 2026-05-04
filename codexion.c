@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:24:24 by inaciri           #+#    #+#             */
-/*   Updated: 2026/04/29 17:57:47 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/05/04 16:15:51 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,9 @@ int	valid_data(int *data, int argc, char **argv)
 		}
 		i++;
 	}
-	if (!strcmp(argv[8], "FIFO"))
+	if (!strcmp(argv[8], "FIFO") || !strcmp(argv[8], "fifo"))
 		data[i] = 0;
-	else if (!strcmp(argv[8], "EDF"))
+	else if (!strcmp(argv[8], "EDF") || !strcmp(argv[8], "edf"))
 		data[i] = 1;
 	else
 	{
@@ -127,6 +127,10 @@ int	main(int argc, char **argv)
 			all_code[i].dongles = 1;
 		else
 			all_code[i].dongles = 2;
+		all_code[i].burn_time = args[1];
+		all_code[i].comp_time = args[2];
+		all_code[i].burn_time = args[3];
+		all_code[i].ref_time = args[4];
 		pthread_create(&code_threads[i], NULL, coders_step, &all_code[i]);
 		pthread_join(code_threads[i], NULL);
 		i++;
