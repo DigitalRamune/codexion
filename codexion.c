@@ -6,9 +6,11 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:24:24 by inaciri           #+#    #+#             */
-/*   Updated: 2026/05/04 16:15:51 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/05/06 16:12:36 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#define _DEFAULT_SOURCE
 
 #include "codexion.h"
 #include <stdio.h>
@@ -19,13 +21,14 @@
 
 struct Code_data {
 	int				id;
-	int				dongles;
-	int				comp_time;
-	int				debug_time;
-	int				ref_time;
-	int				burn_time;
+	useconds_t		comp_time;
+	useconds_t		debug_time;
+	useconds_t		ref_time;
+	useconds_t		burn_time;
 	struct timeval	tv_last;
 	struct timeval	tv_start;
+	pthread_mutex_t	*l_dongle;
+	pthread_mutex_t *r_dongle;
 };
 
 void	argument_names(char **arg_tab)
@@ -82,19 +85,34 @@ void* coders_step(void* argument)
 
 	self_data = (struct Code_data *)argument;
 	i = 0;
-	while (i < self_data->dongles)
+	if (self_data->id % 2 == 0)
 	{
+		pthread_mutex_lock(self_data->l_dongle);
 		gettimeofday(&tv_now, NULL);
-		printf("%ld %d has taken a dongle\n", (tv_now.tv_usec - self_data->tv_start.tv_usec), self_data->id);
-		i++;
+		printf("%ld %d has taken a dongle\n", ((tv_now.tv_usec - self_data->tv_start.tv_usec) /1000), self_data->id);
+		pthread_mutex_lock(self_data->r_dongle);
+		gettimeofday(&tv_now, NULL);
+		printf("%ld %d has taken a dongle\n", ((tv_now.tv_usec - self_data->tv_start.tv_usec) /1000), self_data->id);
+	}
+	else
+	{
+		pthread_mutex_lock(self_data->r_dongle);
+		gettimeofday(&tv_now, NULL);
+		printf("%ld %d has taken a dongle\n", ((tv_now.tv_usec - self_data->tv_start.tv_usec) /1000), self_data->id);
+		pthread_mutex_lock(self_data->l_dongle);
+		gettimeofday(&tv_now, NULL);
+		printf("%ld %d has taken a dongle\n", ((tv_now.tv_usec - self_data->tv_start.tv_usec) /1000), self_data->id);
 	}
 	gettimeofday(&tv_now, NULL);
 	self_data->tv_last = tv_now;
-	printf("%ld %d is compiling\n", (self_data->tv_last.tv_usec - (self_data->tv_start.tv_usec)), self_data->id);
+	printf("%ld %d is compiling\n", ((self_data->tv_last.tv_usec - (self_data->tv_start.tv_usec)) / 1000), self_data->id);
+	usleep(self_data->comp_time);
 	gettimeofday(&tv_now, NULL);
-	printf("%ld %d is debugging\n", (tv_now.tv_usec - (self_data->tv_start.tv_usec)), self_data->id);
+	printf("%ld %d is debugging\n", ((tv_now.tv_usec - (self_data->tv_start.tv_usec)) / 1000), self_data->id);
+	usleep(self_data->debug_time);
 	gettimeofday(&tv_now, NULL);
-	printf("%ld %d is refactoring\n", (tv_now.tv_usec - (self_data->tv_start.tv_usec)), self_data->id);
+	printf("%ld %d is refactoring\n", ((tv_now.tv_usec - (self_data->tv_start.tv_usec)) / 1000), self_data->id);
+	usleep(self_data->ref_time);
 	return NULL;
 }
 
@@ -104,6 +122,7 @@ int	main(int argc, char **argv)
 	struct Code_data	*all_code;
 	struct timeval		tv;
 	pthread_t			*code_threads;
+	pthread_mutex_t		*dongles_tab;
 	int					args[8];
 
 	if (!valid_data(args, argc, argv))
@@ -112,12 +131,20 @@ int	main(int argc, char **argv)
 
 	all_code = malloc(args[0] * sizeof(struct Code_data));
 	code_threads = malloc(args[0] * sizeof(pthread_t));
-	if (!all_code)
+	dongles_tab = malloc(args[0] * sizeof(pthread_mutex_t));
+	if (!all_code || !code_threads || !dongles_tab)
 	{
 		free(all_code);
+		free(code_threads);
+		free(dongles_tab);
 		return 0;
 	}
 	i = 0;
+	while (i < args[0])
+	{
+		pthread_mutex_init(&dongles_tab[i], NULL);
+		i++;
+	}
 	gettimeofday(&tv, NULL);
 	while (i < args[0])
 	{
@@ -128,9 +155,14 @@ int	main(int argc, char **argv)
 		else
 			all_code[i].dongles = 2;
 		all_code[i].burn_time = args[1];
-		all_code[i].comp_time = args[2];
-		all_code[i].burn_time = args[3];
-		all_code[i].ref_time = args[4];
+		all_code[i].comp_time = args[2] * 1000;
+		all_code[i].debug_time = args[3] * 1000;
+		all_code[i].ref_time = args[4] * 1000;
+		if (i == (args[0] - 1))
+			all_code[i].r_dongle = &dongles_tab[0];
+		else
+			all_code[i].r_dongle = &dongles_tab[i + 1];
+		all_code[i].l_dongle = &dongles_tab[i];
 		pthread_create(&code_threads[i], NULL, coders_step, &all_code[i]);
 		pthread_join(code_threads[i], NULL);
 		i++;
