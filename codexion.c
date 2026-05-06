@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:24:24 by inaciri           #+#    #+#             */
-/*   Updated: 2026/05/06 16:12:36 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/05/06 17:25:53 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,8 @@ void* coders_step(void* argument)
 	self_data->tv_last = tv_now;
 	printf("%ld %d is compiling\n", ((self_data->tv_last.tv_usec - (self_data->tv_start.tv_usec)) / 1000), self_data->id);
 	usleep(self_data->comp_time);
+	pthread_mutex_unlock(self_data->l_dongle);
+	pthread_mutex_unlock(self_data->r_dongle);
 	gettimeofday(&tv_now, NULL);
 	printf("%ld %d is debugging\n", ((tv_now.tv_usec - (self_data->tv_start.tv_usec)) / 1000), self_data->id);
 	usleep(self_data->debug_time);
