@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:24:24 by inaciri           #+#    #+#             */
-/*   Updated: 2026/05/11 16:43:06 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/05/13 18:22:48 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ long	clc_time(struct timeval time_s)
 struct Code_data {
 	int				id;
 	int				comp_nbr;
+	int				*stop_flag;
 	useconds_t		comp_time;
 	useconds_t		debug_time;
 	useconds_t		ref_time;
@@ -41,7 +42,8 @@ struct Code_data {
 	pthread_mutex_t	*l_dongle;
 	pthread_mutex_t *r_dongle;
 	pthread_mutex_t *state_mutex;
-	pthread_mutex_t *start_mutex;
+	pthread_mutex_t	*p_mutex;
+	pthread_mutex_t *s_mutex;
 };
 
 void	argument_names(char **arg_tab)
@@ -90,6 +92,27 @@ int	valid_data(int *data, int argc, char **argv)
 	return 1;
 }
 
+int	cmp_nbr(struct Code_data *all_code, int cmp_nbr, int code_nbr)
+{
+	int	i;
+	int	cmp;
+	
+	i = 0;
+	cmp = 0;
+	while (i < code_nbr)
+	{
+		pthread_mutex_lock(all_code[i].state_mutex);
+		if (all_code[i].comp_nbr == cmp_nbr)
+			cmp += 1;
+		pthread_mutex_unlock(all_code[i].state_mutex);
+		i++;
+	}
+	if (cmp == cmp_nbr)
+		return (0);
+	return (1);
+}
+
+
 void* coders_step(void* argument)
 {
 	struct timeval		tv_now;
@@ -101,35 +124,44 @@ void* coders_step(void* argument)
 	i = 0;
 	while(1)
 	{
+		pthread_mutex_lock(self_data->s_mutex);
+		if (*(self_data->stop_flag) == 1)
+		{
+			pthread_mutex_unlock(self_data->s_mutex);
+			break;
+		}
+		pthread_mutex_unlock(self_data->s_mutex);
+		
 		if (self_data->id % 2 == 0)
 		{
 			pthread_mutex_lock(self_data->l_dongle);
-			pthread_mutex_lock(self_data->start_mutex);
+			pthread_mutex_lock(self_data->p_mutex);
 			printf("%ld %d has taken a dongle\n", clc_time(self_data->tv_start), self_data->id);
-			pthread_mutex_unlock(self_data->start_mutex);
+			pthread_mutex_unlock(self_data->p_mutex);
 			pthread_mutex_lock(self_data->r_dongle);
-			pthread_mutex_lock(self_data->start_mutex);
+			pthread_mutex_lock(self_data->p_mutex);
 			printf("%ld %d has taken a dongle\n", clc_time(self_data->tv_start), self_data->id);
-			pthread_mutex_unlock(self_data->start_mutex);
+			pthread_mutex_unlock(self_data->p_mutex);
 		}
 		else
 		{
 			pthread_mutex_lock(self_data->r_dongle);
-			pthread_mutex_lock(self_data->start_mutex);
+			pthread_mutex_lock(self_data->p_mutex);
 			printf("%ld %d has taken a dongle\n", clc_time(self_data->tv_start), self_data->id);
-			pthread_mutex_unlock(self_data->start_mutex);
+			pthread_mutex_unlock(self_data->p_mutex);
 			pthread_mutex_lock(self_data->l_dongle);
-			pthread_mutex_lock(self_data->start_mutex);
+			pthread_mutex_lock(self_data->p_mutex);
 			printf("%ld %d has taken a dongle\n", clc_time(self_data->tv_start), self_data->id);
-			pthread_mutex_unlock(self_data->start_mutex);
+			pthread_mutex_unlock(self_data->p_mutex);
 		}
 		gettimeofday(&tv_now, NULL);
-		
+		pthread_mutex_lock(self_data->state_mutex);
 		self_data->tv_last = tv_now;
 		time_ms = (self_data->tv_last.tv_sec - self_data->tv_start.tv_sec) * 1000 + (self_data->tv_last.tv_usec - self_data->tv_start.tv_usec) / 1000;
-		pthread_mutex_lock(self_data->start_mutex);
+		pthread_mutex_unlock(self_data->state_mutex);
+		pthread_mutex_lock(self_data->p_mutex);
 		printf("%ld %d is compiling\n", time_ms, self_data->id);
-		pthread_mutex_unlock(self_data->start_mutex);
+		pthread_mutex_unlock(self_data->p_mutex);
 		usleep(self_data->comp_time);
 		pthread_mutex_unlock(self_data->l_dongle);
 		pthread_mutex_unlock(self_data->r_dongle);
@@ -138,16 +170,15 @@ void* coders_step(void* argument)
 		self_data->comp_nbr++;
 		pthread_mutex_unlock(self_data->state_mutex);
 		
-		pthread_mutex_lock(self_data->start_mutex);
+		pthread_mutex_lock(self_data->p_mutex);
 		printf("%ld %d is debugging\n", clc_time(self_data->tv_start), self_data->id);
-		pthread_mutex_unlock(self_data->start_mutex);
+		pthread_mutex_unlock(self_data->p_mutex);
 		usleep(self_data->debug_time);
 		
-		pthread_mutex_lock(self_data->start_mutex);
+		pthread_mutex_lock(self_data->p_mutex);
 		printf("%ld %d is refactoring\n", clc_time(self_data->tv_start), self_data->id);
-		pthread_mutex_unlock(self_data->start_mutex);
+		pthread_mutex_unlock(self_data->p_mutex);
 		usleep(self_data->ref_time);
-		return NULL;
 	}
 	return NULL;
 }
@@ -155,13 +186,16 @@ void* coders_step(void* argument)
 int	main(int argc, char **argv)
 {
 	int					i;
+	int					stop_flag;
 	int					finished_coders;
+	int					simulate_running;
 	int					args[8];
 	long				time_ms;
 	pthread_t			*code_threads;
+	pthread_mutex_t		print_mutex;
 	pthread_mutex_t		*dongles_tab;
 	pthread_mutex_t		*comp_nbr_tab;
-	pthread_mutex_t		*start_tab;
+	pthread_mutex_t		stop_mutex;
 	struct Code_data	*all_code;
 	struct timeval		tv;
 
@@ -173,7 +207,6 @@ int	main(int argc, char **argv)
 	code_threads = malloc(args[0] * sizeof(pthread_t));
 	dongles_tab = malloc(args[0] * sizeof(pthread_mutex_t));
 	comp_nbr_tab = malloc(args[0] * sizeof(pthread_mutex_t));
-	start_tab = malloc(args[0] * sizeof(pthread_mutex_t));
 	
 	if (!all_code || !code_threads || !dongles_tab || !comp_nbr_tab)
 	{
@@ -184,14 +217,16 @@ int	main(int argc, char **argv)
 		return 0;
 	}
 	i = 0;
-	
+	stop_flag = 0;
+	simulate_running = 1;
 	while (i < args[0])
 	{
 		pthread_mutex_init(&dongles_tab[i], NULL);
 		pthread_mutex_init(&comp_nbr_tab[i], NULL);
-		pthread_mutex_init(&start_tab[i], NULL);
 		i++;
 	}
+	pthread_mutex_init(&print_mutex, NULL);
+	pthread_mutex_init(&stop_mutex, NULL);
 	gettimeofday(&tv, NULL);
 	
 	i = 0;
@@ -199,6 +234,7 @@ int	main(int argc, char **argv)
 	{
 		all_code[i].id = i + 1;
 		all_code[i].tv_start = tv;
+		all_code[i].tv_last = tv;
 		all_code[i].burn_time = args[1];
 		all_code[i].comp_time = args[2] * 1000;
 		all_code[i].debug_time = args[3] * 1000;
@@ -210,12 +246,14 @@ int	main(int argc, char **argv)
 		all_code[i].l_dongle = &dongles_tab[i];
 		all_code[i].comp_nbr = 0;
 		all_code[i].state_mutex = &comp_nbr_tab[i];
-		all_code[i].start_mutex = &start_tab[i];
+		all_code[i].p_mutex = &print_mutex;
+		all_code[i].s_mutex = &stop_mutex;
+		all_code[i].stop_flag = &stop_flag;
 		pthread_create(&code_threads[i], NULL, coders_step, &all_code[i]);
 		i++;
 	}
 	
-	while(1)
+	while(simulate_running && cmp_nbr(all_code, args[5], args[0]))
 	{
 		i = 0;
 		finished_coders = 0;
@@ -225,17 +263,19 @@ int	main(int argc, char **argv)
 			pthread_mutex_lock(all_code[i].state_mutex);
 			
 			gettimeofday(&tv, NULL);
-			pthread_mutex_lock(all_code[i].start_mutex);
 			time_ms = clc_time(all_code[i].tv_last);
-			pthread_mutex_unlock(all_code[i].start_mutex);
 			if (time_ms > args[1])
 			{
 				printf("%d\n", args[1]);
 				gettimeofday(&tv, NULL);
-				pthread_mutex_lock(all_code[i].start_mutex);
+				pthread_mutex_lock(all_code[i].p_mutex);
 				printf("%ld %d burned out\n", clc_time(all_code[i].tv_start), all_code[i].id);
-				pthread_mutex_unlock(all_code[i].start_mutex);
+				pthread_mutex_unlock(all_code[i].p_mutex);
 				pthread_mutex_unlock(all_code[i].state_mutex);
+				pthread_mutex_lock(all_code[i].s_mutex);
+				stop_flag = 1;
+				pthread_mutex_unlock(all_code[i].s_mutex);
+				simulate_running = 0;
 				break;
 			}
 			pthread_mutex_unlock(all_code[i].state_mutex);
@@ -243,6 +283,9 @@ int	main(int argc, char **argv)
 		}
 		
 	}
+	pthread_mutex_lock(&stop_mutex);
+	stop_flag = 1;
+	pthread_mutex_unlock(&stop_mutex);
 
 	i = 0;
 	while (i < args[0])
