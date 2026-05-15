@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:24:24 by inaciri           #+#    #+#             */
-/*   Updated: 2026/05/14 18:29:14 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/05/15 17:16:29 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,18 @@ long	clc_time(struct timeval time_s)
 	return time_ms;
 }
 
+struct	Dongle
+{
+	pthread_mutex_t	d_mutex;
+	pthread_cond_t	cond;
+	int				is_used;
+	int				*id_list;
+	int				head;
+	int				list_size;
+	int				total_coders;
+	int				tail;	
+};
+
 struct Code_data {
 	int				id;
 	int				comp_nbr;
@@ -44,6 +56,7 @@ struct Code_data {
 	pthread_mutex_t *state_mutex;
 	pthread_mutex_t	*p_mutex;
 	pthread_mutex_t *s_mutex;
+	struct Dongle	*dongle;
 };
 
 void	argument_names(char **arg_tab)
@@ -132,6 +145,10 @@ void* coders_step(void* argument)
 	int					i;
 	long				time_ms;
 
+	pthread_mutex_lock(&self_data->dongle->d_mutex);
+	self_data->dongle->id_list[self_data->dongle->tail] = self_data->id;
+	self_data->dongle->list_size += 1;
+	self_data->dongle->tail = (self_data->dongle->tail + 1) % (self_data->dongle->total_coders);
 	self_data = (struct Code_data *)argument;
 	i = 0;
 	while(1)
@@ -196,6 +213,7 @@ int	main(int argc, char **argv)
 	pthread_mutex_t		stop_mutex;
 	struct Code_data	*all_code;
 	struct timeval		tv;
+	struct Dongle		dongle;
 
 	if (!valid_data(args, argc, argv))
 		return 0;
@@ -205,6 +223,7 @@ int	main(int argc, char **argv)
 	code_threads = malloc(args[0] * sizeof(pthread_t));
 	dongles_tab = malloc(args[0] * sizeof(pthread_mutex_t));
 	comp_nbr_tab = malloc(args[0] * sizeof(pthread_mutex_t));
+	dongle.total_coders = args[0];
 	
 	if (!all_code || !code_threads || !dongles_tab || !comp_nbr_tab)
 	{
@@ -247,6 +266,7 @@ int	main(int argc, char **argv)
 		all_code[i].p_mutex = &print_mutex;
 		all_code[i].s_mutex = &stop_mutex;
 		all_code[i].stop_flag = &stop_flag;
+		all_code[i].dongle = &dongle;
 		pthread_create(&code_threads[i], NULL, coders_step, &all_code[i]);
 		i++;
 	}
