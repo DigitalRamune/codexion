@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:24:24 by inaciri           #+#    #+#             */
-/*   Updated: 2026/05/13 18:22:48 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/05/14 18:29:14 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,18 @@ void	argument_names(char **arg_tab)
 	arg_tab[7] = "scheduler";
 }
 
+void	safe_print(struct Code_data *data, char *status_s)
+{
+	pthread_mutex_lock(data->p_mutex);
+	pthread_mutex_lock(data->s_mutex);
+	if (*(data->stop_flag) == 0)
+	{
+		printf("%ld %d %s\n", clc_time(data->tv_start), data->id, status_s);
+	}
+	pthread_mutex_unlock(data->p_mutex);
+	pthread_mutex_unlock(data->s_mutex);
+}
+
 int	valid_data(int *data, int argc, char **argv)
 {
 	int i;
@@ -73,7 +85,7 @@ int	valid_data(int *data, int argc, char **argv)
 	while (i < 7)
 	{
 		data[i] = atoi(argv[i + 1]);
-		if (data[i] == 0)
+		if (data[i] < 0)
 		{
 			printf("Invalid %s\n", arg_name[i]);
 			return 0;
@@ -135,33 +147,23 @@ void* coders_step(void* argument)
 		if (self_data->id % 2 == 0)
 		{
 			pthread_mutex_lock(self_data->l_dongle);
-			pthread_mutex_lock(self_data->p_mutex);
-			printf("%ld %d has taken a dongle\n", clc_time(self_data->tv_start), self_data->id);
-			pthread_mutex_unlock(self_data->p_mutex);
+			safe_print(self_data, "has taken a dongle");
 			pthread_mutex_lock(self_data->r_dongle);
-			pthread_mutex_lock(self_data->p_mutex);
-			printf("%ld %d has taken a dongle\n", clc_time(self_data->tv_start), self_data->id);
-			pthread_mutex_unlock(self_data->p_mutex);
+			safe_print(self_data, "has taken a dongle");
 		}
 		else
 		{
 			pthread_mutex_lock(self_data->r_dongle);
-			pthread_mutex_lock(self_data->p_mutex);
-			printf("%ld %d has taken a dongle\n", clc_time(self_data->tv_start), self_data->id);
-			pthread_mutex_unlock(self_data->p_mutex);
+			safe_print(self_data, "has taken a dongle");
 			pthread_mutex_lock(self_data->l_dongle);
-			pthread_mutex_lock(self_data->p_mutex);
-			printf("%ld %d has taken a dongle\n", clc_time(self_data->tv_start), self_data->id);
-			pthread_mutex_unlock(self_data->p_mutex);
+			safe_print(self_data, "has taken a dongle");
 		}
 		gettimeofday(&tv_now, NULL);
 		pthread_mutex_lock(self_data->state_mutex);
 		self_data->tv_last = tv_now;
 		time_ms = (self_data->tv_last.tv_sec - self_data->tv_start.tv_sec) * 1000 + (self_data->tv_last.tv_usec - self_data->tv_start.tv_usec) / 1000;
 		pthread_mutex_unlock(self_data->state_mutex);
-		pthread_mutex_lock(self_data->p_mutex);
-		printf("%ld %d is compiling\n", time_ms, self_data->id);
-		pthread_mutex_unlock(self_data->p_mutex);
+		safe_print(self_data, "is compiling");
 		usleep(self_data->comp_time);
 		pthread_mutex_unlock(self_data->l_dongle);
 		pthread_mutex_unlock(self_data->r_dongle);
@@ -170,14 +172,10 @@ void* coders_step(void* argument)
 		self_data->comp_nbr++;
 		pthread_mutex_unlock(self_data->state_mutex);
 		
-		pthread_mutex_lock(self_data->p_mutex);
-		printf("%ld %d is debugging\n", clc_time(self_data->tv_start), self_data->id);
-		pthread_mutex_unlock(self_data->p_mutex);
+		safe_print(self_data, "is debugging");
 		usleep(self_data->debug_time);
 		
-		pthread_mutex_lock(self_data->p_mutex);
-		printf("%ld %d is refactoring\n", clc_time(self_data->tv_start), self_data->id);
-		pthread_mutex_unlock(self_data->p_mutex);
+		safe_print(self_data, "is refactoring");
 		usleep(self_data->ref_time);
 	}
 	return NULL;
@@ -270,18 +268,17 @@ int	main(int argc, char **argv)
 				gettimeofday(&tv, NULL);
 				pthread_mutex_lock(all_code[i].p_mutex);
 				printf("%ld %d burned out\n", clc_time(all_code[i].tv_start), all_code[i].id);
-				pthread_mutex_unlock(all_code[i].p_mutex);
 				pthread_mutex_unlock(all_code[i].state_mutex);
 				pthread_mutex_lock(all_code[i].s_mutex);
 				stop_flag = 1;
 				pthread_mutex_unlock(all_code[i].s_mutex);
+				pthread_mutex_unlock(all_code[i].p_mutex);
 				simulate_running = 0;
 				break;
 			}
 			pthread_mutex_unlock(all_code[i].state_mutex);
 			i++;
 		}
-		
 	}
 	pthread_mutex_lock(&stop_mutex);
 	stop_flag = 1;
