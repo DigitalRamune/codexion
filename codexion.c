@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:24:24 by inaciri           #+#    #+#             */
-/*   Updated: 2026/05/15 17:16:29 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/05/18 18:39:52 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ long	clc_time(struct timeval time_s)
 
 struct	Dongle
 {
-	pthread_mutex_t	d_mutex;
+	pthread_mutex_t	mutex;
 	pthread_cond_t	cond;
 	int				is_used;
 	int				*id_list;
@@ -51,12 +51,11 @@ struct Code_data {
 	useconds_t		burn_time;
 	struct timeval	tv_last;
 	struct timeval	tv_start;
-	pthread_mutex_t	*l_dongle;
-	pthread_mutex_t *r_dongle;
 	pthread_mutex_t *state_mutex;
 	pthread_mutex_t	*p_mutex;
 	pthread_mutex_t *s_mutex;
-	struct Dongle	*dongle;
+	struct Dongle	*l_dongle;
+	struct Dongle	*r_dongle;
 };
 
 void	argument_names(char **arg_tab)
@@ -144,12 +143,12 @@ void* coders_step(void* argument)
 	struct Code_data	*self_data;
 	int					i;
 	long				time_ms;
-
-	pthread_mutex_lock(&self_data->dongle->d_mutex);
-	self_data->dongle->id_list[self_data->dongle->tail] = self_data->id;
-	self_data->dongle->list_size += 1;
-	self_data->dongle->tail = (self_data->dongle->tail + 1) % (self_data->dongle->total_coders);
+	
 	self_data = (struct Code_data *)argument;
+	pthread_mutex_lock(&self_data->l_dongle->mutex);
+	self_data->l_dongle->id_list[self_data->l_dongle->tail] = self_data->id;
+	self_data->l_dongle->list_size += 1;
+	self_data->l_dongle->tail = (self_data->l_dongle->tail + 1) % (self_data->l_dongle->total_coders);
 	i = 0;
 	while(1)
 	{
@@ -208,12 +207,11 @@ int	main(int argc, char **argv)
 	long				time_ms;
 	pthread_t			*code_threads;
 	pthread_mutex_t		print_mutex;
-	pthread_mutex_t		*dongles_tab;
+	struct Dongle		*dongles_tab;
 	pthread_mutex_t		*comp_nbr_tab;
 	pthread_mutex_t		stop_mutex;
 	struct Code_data	*all_code;
 	struct timeval		tv;
-	struct Dongle		dongle;
 
 	if (!valid_data(args, argc, argv))
 		return 0;
@@ -221,9 +219,8 @@ int	main(int argc, char **argv)
 
 	all_code = malloc(args[0] * sizeof(struct Code_data));
 	code_threads = malloc(args[0] * sizeof(pthread_t));
-	dongles_tab = malloc(args[0] * sizeof(pthread_mutex_t));
+	dongles_tab = malloc(args[0] * sizeof(struct Dongle));
 	comp_nbr_tab = malloc(args[0] * sizeof(pthread_mutex_t));
-	dongle.total_coders = args[0];
 	
 	if (!all_code || !code_threads || !dongles_tab || !comp_nbr_tab)
 	{
@@ -238,8 +235,17 @@ int	main(int argc, char **argv)
 	simulate_running = 1;
 	while (i < args[0])
 	{
-		pthread_mutex_init(&dongles_tab[i], NULL);
+		pthread_mutex_init(&dongles_tab[i].mutex, NULL);
 		pthread_mutex_init(&comp_nbr_tab[i], NULL);
+		pthread_cond_init(&dongles_tab[i].cond, NULL);
+		dongles_tab[i].total_coders = args[0];
+		dongles_tab[i].is_used = 0;
+		dongles_tab[i].head = 0;
+		dongles_tab[i].tail = 0;
+		dongles_tab[i].list_size = 0;
+		dongles_tab[i].id_list = malloc(args[0] * sizeof(int));
+		if (!dongles_tab[i].id_list)
+			return 0;
 		i++;
 	}
 	pthread_mutex_init(&print_mutex, NULL);
@@ -266,7 +272,6 @@ int	main(int argc, char **argv)
 		all_code[i].p_mutex = &print_mutex;
 		all_code[i].s_mutex = &stop_mutex;
 		all_code[i].stop_flag = &stop_flag;
-		all_code[i].dongle = &dongle;
 		pthread_create(&code_threads[i], NULL, coders_step, &all_code[i]);
 		i++;
 	}
