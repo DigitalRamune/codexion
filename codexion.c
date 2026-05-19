@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:24:24 by inaciri           #+#    #+#             */
-/*   Updated: 2026/05/18 18:39:52 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/05/19 19:22:55 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,12 @@ void* coders_step(void* argument)
 	self_data->l_dongle->list_size += 1;
 	self_data->l_dongle->tail = (self_data->l_dongle->tail + 1) % (self_data->l_dongle->total_coders);
 	i = 0;
+	while (self_data->l_dongle->is_used == 1 || self_data->l_dongle->id_list[self_data->l_dongle->head] != self_data->id)
+		pthread_cond_wait(&self_data->l_dongle->cond, &self_data->l_dongle->mutex);
+	self_data->l_dongle->is_used = 1;
+	self_data->l_dongle->list_size -= 1;
+	self_data->l_dongle->head = (self_data->l_dongle->head + 1) % (self_data->l_dongle->total_coders);
+	
 	while(1)
 	{
 		pthread_mutex_lock(self_data->s_mutex);
