@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:24:24 by inaciri           #+#    #+#             */
-/*   Updated: 2026/05/19 19:22:55 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/05/20 17:15:24 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,28 @@ struct Code_data {
 	struct Dongle	*l_dongle;
 	struct Dongle	*r_dongle;
 };
+
+void	take_dongle(struct Dongle *dongle, int id)
+{
+	pthread_mutex_lock(&dongle->mutex);
+	dongle->id_list[dongle->tail] = id;
+	dongle->list_size += 1;
+	dongle->tail = (dongle->tail + 1) % (dongle->total_coders);
+	while (dongle->is_used == 1 || dongle->id_list[dongle->head] != id)
+		pthread_cond_wait(&dongle->cond, &dongle->mutex);
+	dongle->is_used = 1;
+	dongle->list_size -= 1;
+	dongle->head = (dongle->head + 1) % (dongle->total_coders);
+	pthread_mutex_unlock(&dongle->mutex);
+}
+
+void	release_dongle(struct Dongle *dongle)
+{
+	pthread_mutex_lock(&dongle->mutex);
+	dongle->is_used = 0;
+	pthread_cond_broadcast(&dongle->cond);
+	pthread_mutex_unlock(&dongle->mutex);
+}
 
 void	argument_names(char **arg_tab)
 {
@@ -145,17 +167,7 @@ void* coders_step(void* argument)
 	long				time_ms;
 	
 	self_data = (struct Code_data *)argument;
-	pthread_mutex_lock(&self_data->l_dongle->mutex);
-	self_data->l_dongle->id_list[self_data->l_dongle->tail] = self_data->id;
-	self_data->l_dongle->list_size += 1;
-	self_data->l_dongle->tail = (self_data->l_dongle->tail + 1) % (self_data->l_dongle->total_coders);
 	i = 0;
-	while (self_data->l_dongle->is_used == 1 || self_data->l_dongle->id_list[self_data->l_dongle->head] != self_data->id)
-		pthread_cond_wait(&self_data->l_dongle->cond, &self_data->l_dongle->mutex);
-	self_data->l_dongle->is_used = 1;
-	self_data->l_dongle->list_size -= 1;
-	self_data->l_dongle->head = (self_data->l_dongle->head + 1) % (self_data->l_dongle->total_coders);
-	
 	while(1)
 	{
 		pthread_mutex_lock(self_data->s_mutex);
@@ -168,16 +180,16 @@ void* coders_step(void* argument)
 		
 		if (self_data->id % 2 == 0)
 		{
-			pthread_mutex_lock(self_data->l_dongle);
+			take_dongle(self_data->l_dongle, self_data->id);
 			safe_print(self_data, "has taken a dongle");
-			pthread_mutex_lock(self_data->r_dongle);
+			take_dongle(self_data->r_dongle, self_data->id);
 			safe_print(self_data, "has taken a dongle");
 		}
 		else
 		{
-			pthread_mutex_lock(self_data->r_dongle);
+			take_dongle(self_data->r_dongle, self_data->id);
 			safe_print(self_data, "has taken a dongle");
-			pthread_mutex_lock(self_data->l_dongle);
+			take_dongle(self_data->l_dongle, self_data->id);
 			safe_print(self_data, "has taken a dongle");
 		}
 		gettimeofday(&tv_now, NULL);
@@ -187,8 +199,8 @@ void* coders_step(void* argument)
 		pthread_mutex_unlock(self_data->state_mutex);
 		safe_print(self_data, "is compiling");
 		usleep(self_data->comp_time);
-		pthread_mutex_unlock(self_data->l_dongle);
-		pthread_mutex_unlock(self_data->r_dongle);
+		release_dongle(self_data->l_dongle);
+		release_dongle(self_data->r_dongle);
 		
 		pthread_mutex_lock(self_data->state_mutex);
 		self_data->comp_nbr++;
