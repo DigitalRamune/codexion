@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 15:09:30 by inaciri           #+#    #+#             */
-/*   Updated: 2026/05/22 16:18:57 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/05/25 19:00:42 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	print_struct(struct P_arg *param)
 	printf("%d\n", (*param).time_to_debug);
 	printf("%d\n", (*param).time_to_refactor);
 	printf("%d\n", (*param).required_compiles);
-	printf("%d\n", (*param).dongle_coooldown);
+	printf("%d\n", (*param).dongle_cooldown);
 	printf("%s\n", (*param).scheduler);
 }
 
