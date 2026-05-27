@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:30:49 by inaciri           #+#    #+#             */
-/*   Updated: 2026/05/27 08:52:10 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/05/27 13:18:29 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
-#include <sys/time.h>
+# include <sys/time.h>
+# include <pthread.h>
 
 typedef struct P_arg
 {
