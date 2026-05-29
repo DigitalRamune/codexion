@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 17:11:54 by inaciri           #+#    #+#             */
-/*   Updated: 2026/05/27 16:30:29 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/05/29 14:56:50 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,28 +85,71 @@ void	heap_bubble_up(t_sim *simulation, t_dongle *dongle, t_request new_req)
 	return;
 }
 
-void	heap_bubble_down(t_sim *simulation, t_dongle *dongle)
+void	ft_replace(t_request save, t_request replacing, t_request new_one)
+{
+	save = replacing;
+	replacing = new_one;
+	new_one = save;
+	return ;
+}
+
+t_request	heap_bubble_down(t_sim *simulation, t_dongle *dongle)
 {
 	t_request	save;
+	t_request	temp;
 	int			child1;
 	int			child2;
+	int			current_index;
 	int			stop;
-	int			result;
 
-	stop = 0;
 	save = dongle->heap[0];
 	dongle->heap[0] = dongle->heap[dongle->in_heap - 1];
 	dongle->in_heap -= 1;
-	child1 = 1;
-	child2 = 2;
-	while (child1 < dongle->in_heap && child2 < dongle->in_heap && stop == 0)
+	current_index = 0;
+	stop = 0;
+	while (!stop)
 	{
-		result = ft_compare(simulation, dongle->heap[child1], dongle->heap[child2]);
-		if (result == 1)
+		child1 = (2 * current_index) + 1;
+		child2 = (2 * current_index) + 2;
+		if (child1 >= dongle->in_heap || child2 >= dongle->in_heap)
 		{
-			
+			if (child1 < dongle->in_heap)
+			{
+				if (ft_compare(simulation, dongle->heap[current_index], dongle->heap[child1]))
+				{
+					temp = dongle->heap[current_index];
+					dongle->heap[current_index] = dongle->heap[child1];
+					dongle->heap[child1] = temp;
+					current_index = child1;
+				}
+			}
+			stop = 1;
+			break;
 		}
-		child1 = (2 * child1) + 1;
-		child2 = (2 * child2) + 2;
+		if (ft_compare(simulation, dongle->heap[child1], dongle->heap[child2]))
+		{
+			if (ft_compare(simulation, dongle->heap[current_index], dongle->heap[child2]))
+			{
+				temp = dongle->heap[current_index];
+				dongle->heap[current_index] = dongle->heap[child2];
+				dongle->heap[child2] = temp;
+				current_index = child2;
+			}
+			else
+				stop = 1;
+		}
+		else
+		{
+			if (ft_compare(simulation, dongle->heap[current_index], dongle->heap[child1]))
+			{
+				temp = dongle->heap[current_index];
+				dongle->heap[current_index] = dongle->heap[child1];
+				dongle->heap[child1] = temp;
+				current_index = child1;
+			}
+			else
+				stop = 1;
+		}
 	}
+	return save;
 }
