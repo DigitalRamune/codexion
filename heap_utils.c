@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 17:11:54 by inaciri           #+#    #+#             */
-/*   Updated: 2026/05/29 14:56:50 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/05/29 16:12:56 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	heap_bubble_up(t_sim *simulation, t_dongle *dongle, t_request new_req)
 	t_request	temp;
 	
 	if (dongle->in_heap >= dongle->max_coders)
-		return;
+		return ;
 	kid_index = dongle->in_heap;
 	dongle->heap[dongle->in_heap] = new_req;
 	dongle->in_heap += 1;
@@ -82,14 +82,6 @@ void	heap_bubble_up(t_sim *simulation, t_dongle *dongle, t_request new_req)
 		kid_index = parent_index;
 		parent_index = (kid_index - 1) / 2;
 	}
-	return;
-}
-
-void	ft_replace(t_request save, t_request replacing, t_request new_one)
-{
-	save = replacing;
-	replacing = new_one;
-	new_one = save;
 	return ;
 }
 
@@ -124,7 +116,7 @@ t_request	heap_bubble_down(t_sim *simulation, t_dongle *dongle)
 				}
 			}
 			stop = 1;
-			break;
+			break ;
 		}
 		if (ft_compare(simulation, dongle->heap[child1], dongle->heap[child2]))
 		{
@@ -151,5 +143,33 @@ t_request	heap_bubble_down(t_sim *simulation, t_dongle *dongle)
 				stop = 1;
 		}
 	}
-	return save;
+	return (save);
+}
+
+void	heap_insert(t_sim *sim, t_dongle *dong, t_coder *cod)
+{
+	t_request		req;
+	struct timeval	tv;
+	struct timeval	burn_conv;
+	struct timeval	deadline;
+	
+	if (dong->in_heap < dong->max_coders)
+	{
+		gettimeofday(&tv, NULL);
+		burn_conv.tv_sec = sim->param->time_to_burn / 1000;
+		burn_conv.tv_usec = (sim->param->time_to_burn % 1000) * 1000;
+		deadline.tv_sec = cod->last_compile.tv_sec + burn_conv.tv_sec;
+		deadline.tv_usec = cod->last_compile.tv_usec + burn_conv.tv_usec;
+		if (deadline.tv_usec >= 1000000)
+		{
+			deadline.tv_usec -= 1000000;
+			deadline.tv_sec += 1;
+		}
+		req.id = cod->id;
+		req.request_time.tv_sec = tv.tv_sec;
+		req.request_time.tv_usec = tv.tv_usec;
+		req.deadline.tv_sec = deadline.tv_sec;
+		req.deadline.tv_usec = deadline.tv_usec;
+		heap_bubble_up(sim, dong, req);
+	}
 }

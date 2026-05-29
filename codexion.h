@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:30:49 by inaciri           #+#    #+#             */
-/*   Updated: 2026/05/27 13:18:29 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/05/29 15:38:23 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,15 @@ typedef struct C_coder
 	t_sim			*simulation;
 }					t_coder;
 
-int	ft_parsing(char *data, char **argv);
-int	error_return(int z, char *arg_name);
-int	valid_data(int *data, int argc, char **argv);
-int	fill_struct(int argc, char **argv, struct P_arg *param);
+int			ft_parsing(char *data, char **argv);
+int			error_return(int z, char *arg_name);
+int			valid_data(int *data, int argc, char **argv);
+int			fill_struct(int argc, char **argv, struct P_arg *param);
+
+int			ft_edf_compare(t_request req1, t_request req2);
+int			ft_compare(t_sim *simulation, t_request req1, t_request req2);
+void		heap_bubble_up(t_sim *simulation, t_dongle *dongle, t_request new_req);
+void		ft_replace(t_request save, t_request replacing, t_request new_one);
+t_request	heap_bubble_down(t_sim *simulation, t_dongle *dongle);
 
 #endif
