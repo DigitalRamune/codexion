@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 17:11:54 by inaciri           #+#    #+#             */
-/*   Updated: 2026/05/29 16:12:56 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/02 10:47:22 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,4 +172,21 @@ void	heap_insert(t_sim *sim, t_dongle *dong, t_coder *cod)
 		req.deadline.tv_usec = deadline.tv_usec;
 		heap_bubble_up(sim, dong, req);
 	}
+}
+
+t_request heap_extract(t_sim *sim, t_dongle *dongle)
+{
+	t_request error_req;
+	
+	if (dongle->in_heap <= 0)
+		{
+			error_req.id = -1;
+			return (error_req);		
+		}
+	return (heap_bubble_down(sim, dongle));
+}
+
+t_request check_min(t_sim *sim, t_dongle *dongle)
+{
+	return (dongle->heap[0]);
 }
