@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 18:34:02 by inaciri           #+#    #+#             */
-/*   Updated: 2026/05/25 19:48:22 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/03 15:52:43 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	valid_data(int *data, int argc, char **argv)
 	return (1);
 }
 
-int	fill_struct(int argc, char **argv, struct P_arg *param)
+int	fill_struct(int argc, char **argv, t_arg *param)
 {
 	int	data[8];
 

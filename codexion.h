@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:30:49 by inaciri           #+#    #+#             */
-/*   Updated: 2026/05/29 15:38:23 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/03 17:52:22 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,23 @@ typedef struct C_coder
 int			ft_parsing(char *data, char **argv);
 int			error_return(int z, char *arg_name);
 int			valid_data(int *data, int argc, char **argv);
-int			fill_struct(int argc, char **argv, struct P_arg *param);
+int			fill_struct(int argc, char **argv, t_arg *param);
 
 int			ft_edf_compare(t_request req1, t_request req2);
 int			ft_compare(t_sim *simulation, t_request req1, t_request req2);
 void		heap_bubble_up(t_sim *simulation, t_dongle *dongle, t_request new_req);
-void		ft_replace(t_request save, t_request replacing, t_request new_one);
 t_request	heap_bubble_down(t_sim *simulation, t_dongle *dongle);
+void		heap_insert(t_sim *sim, t_dongle *dong, t_coder *cod);
+t_request	heap_extract(t_sim *sim, t_dongle *dongle);
+t_request	check_min(t_dongle *dongle);
+
+int			init_dongle_tab(t_sim *sim);
+int			init_coders_tab(t_sim *sim);
+int			init_simulation(t_sim *sim, t_arg *arg);
+
+void		cooldown_convert(t_dongle *dongle, t_sim *sim);
+int			init_dongle_heap(t_dongle *dongle);
+int			init_dongle(t_dongle *dongle, t_sim *sim);
+int			add_all_dongle(t_sim *sim);
 
 #endif

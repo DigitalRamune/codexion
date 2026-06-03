@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/02 10:49:27 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/03 15:26:49 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/03 15:49:43 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	print_heap(t_dongle *dongle)
 		i++;
 	}
 }
-
+// VERIF MAIN
 int main()
 {
 	t_sim simulation;

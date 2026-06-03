@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 15:09:30 by inaciri           #+#    #+#             */
-/*   Updated: 2026/05/25 19:00:42 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/03 17:52:48 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,13 @@ void	print_struct(struct P_arg *param)
 
 int	main(int argc, char **argv)
 {
-	struct P_arg	param;
+	t_arg	param;
+	t_sim	sim;
 
 	if (!fill_struct(argc, argv, &param))
 		return (0);
-	printf("All param are good\n");
-	print_struct(&param);
+	if (!init_simulation(&sim, &param))
+		return (0);
+	if (!add_all_dongle(&sim))
+		return (0);
 }

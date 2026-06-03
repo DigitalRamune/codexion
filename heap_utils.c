@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 17:11:54 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/02 10:47:22 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/03 15:54:20 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ int	ft_compare(t_sim *simulation, t_request req1, t_request req2)
 void	heap_bubble_up(t_sim *simulation, t_dongle *dongle, t_request new_req)
 {
 	int			parent_index;
-	int			temp_index;
 	int			kid_index;
 	t_request	temp;
 	
@@ -186,7 +185,12 @@ t_request heap_extract(t_sim *sim, t_dongle *dongle)
 	return (heap_bubble_down(sim, dongle));
 }
 
-t_request check_min(t_sim *sim, t_dongle *dongle)
+t_request check_min(t_dongle *dongle)
 {
-	return (dongle->heap[0]);
+	t_request error_req;
+
+	if (dongle->heap > 0)
+		return (dongle->heap[0]);
+	error_req.id = -1;
+	return (error_req);
 }
