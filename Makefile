@@ -6,7 +6,7 @@
 #    By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/04/20 14:22:45 by inaciri           #+#    #+#              #
-#    Updated: 2026/06/03 16:23:13 by inaciri          ###   ########.fr        #
+#    Updated: 2026/06/05 18:33:53 by inaciri          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,8 @@ SRCS = main.c \
 		heap_utils.c \
 		simulation.c \
 		dongle.c \
+		time.c \
+		coders.c \
 
 OBJS := ${SRCS:.c=.o}
 

@@ -1,0 +1,44 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   coders.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/05 18:14:11 by inaciri           #+#    #+#             */
+/*   Updated: 2026/06/05 18:33:42 by inaciri          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "codexion.h"
+
+void	init_coder(t_coder *cod, t_sim *sim, int id)
+{
+	cod->id = id;
+	cod->compilations = 0;
+	cod->last_compile.tv_sec = sim->start.tv_sec;
+	cod->last_compile.tv_usec = sim->start.tv_usec;
+	cod->simulation = sim;
+	if (id == 0)
+	{
+		cod->left = &sim->dongle_tab[sim->param->nbr_of_coders - 1];
+		cod->right = &sim->dongle_tab[0];
+	}
+	else
+	{
+		cod->left =  &sim->dongle_tab[id - 1];
+		cod->right = &sim->dongle_tab[id];
+	}
+}
+
+void	add_all_coders(t_sim *sim)
+{
+	int	i;
+
+	i = 0;
+	while (i < sim->param->nbr_of_coders)
+	{
+		init_coder(&sim->coders_tab[i], sim, i);
+		i++;
+	}
+}
