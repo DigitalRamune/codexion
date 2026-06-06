@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+         #
+#    By: inaciri < inaciri@student.42mulhouse.fr    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/04/20 14:22:45 by inaciri           #+#    #+#              #
-#    Updated: 2026/06/05 18:33:53 by inaciri          ###   ########.fr        #
+#    Updated: 2026/06/06 15:48:47 by inaciri          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ SRCS = main.c \
 		dongle.c \
 		time.c \
 		coders.c \
+		edge_case.c \
 
 OBJS := ${SRCS:.c=.o}
 

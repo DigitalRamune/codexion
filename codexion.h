@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   codexion.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
+/*   By: inaciri < inaciri@student.42mulhouse.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:30:49 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/05 18:34:59 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/06 16:40:54 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CODEXION_H
 # define CODEXION_H
 
-# include <bsd/string.h>
+# include <string.h>
 # include <limits.h>
 # include <stdarg.h>
 # include <stddef.h>
@@ -104,5 +104,11 @@ void			add_all_coders(t_sim *sim);
 
 int				timeval_compare(struct timeval a, struct timeval b);
 struct timeval	timeval_add(struct timeval a, struct timeval b);
+
+int				one_coder(t_sim *sim);
+
+int				is_min(t_dongle *dong, t_coder *cod);
+int				cond_check(t_dongle *dong, t_coder *cod);
+void			dongle_acquisition(t_dongle *dong, t_coder *cod, t_sim *sim);
 
 #endif
