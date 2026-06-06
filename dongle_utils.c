@@ -52,3 +52,16 @@ void    dongle_acquisition(t_dongle *dong, t_coder *cod, t_sim *sim)
     }
     pthread_mutex_unlock(&dong->m_dongle);
 }
+
+void    dongle_liberation(t_sim *sim, t_dongle *dong)
+{
+    struct timeval  tv;
+
+    pthread_mutex_lock(&dong->m_dongle);
+    dong->is_used = 0;
+    gettimeofday(&tv, NULL);
+    dong->released_at.tv_sec = tv.tv_sec;
+    dong->released_at.tv_usec = tv.tv_usec;
+    pthread_cond_broadcast(&dong->cond_dongle);
+    pthread_mutex_unlock(&dong->m_dongle);
+}

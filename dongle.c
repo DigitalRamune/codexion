@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dongle.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
+/*   By: inaciri < inaciri@student.42mulhouse.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 16:22:41 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/03 18:27:28 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/06 16:53:07 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ int	init_dongle(t_dongle *dongle, t_sim *sim)
 	dongle->is_used = 0;
 	dongle->max_coders = 2;
 	dongle->in_heap = 0;
+	dongle->released_at.tv_sec = 0;
+	dongle->released_at.tv_usec = 0;
 	cooldown_convert(dongle, sim);
 	if (!init_dongle_heap(dongle))
 		return(0);

@@ -6,7 +6,7 @@
 /*   By: inaciri < inaciri@student.42mulhouse.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:30:49 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/06 16:40:54 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/06 16:53:27 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,5 +110,6 @@ int				one_coder(t_sim *sim);
 int				is_min(t_dongle *dong, t_coder *cod);
 int				cond_check(t_dongle *dong, t_coder *cod);
 void			dongle_acquisition(t_dongle *dong, t_coder *cod, t_sim *sim);
+void			dongle_liberation(t_sim *sim, t_dongle *dong);
 
 #endif
