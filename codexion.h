@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   codexion.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inaciri < inaciri@student.42mulhouse.fr    +#+  +:+       +#+        */
+/*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:30:49 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/06 16:53:27 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/08 15:54:15 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ typedef struct C_coder
 	t_dongle		*right;
 	struct timeval	last_compile;
 	t_sim			*simulation;
+	pthread_mutex_t	m_comp;
 }					t_coder;
 
 int				ft_parsing(char *data, char **argv);
@@ -111,5 +112,10 @@ int				is_min(t_dongle *dong, t_coder *cod);
 int				cond_check(t_dongle *dong, t_coder *cod);
 void			dongle_acquisition(t_dongle *dong, t_coder *cod, t_sim *sim);
 void			dongle_liberation(t_sim *sim, t_dongle *dong);
+
+void			print_dong(t_sim *sim, t_coder *cod);
+void			print_comp(t_sim *sim, t_coder *cod);
+void			print_debug(t_sim *sim, t_coder *cod);
+void			print_refactor(t_sim *sim, t_coder *cod);
 
 #endif
