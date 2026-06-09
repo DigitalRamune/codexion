@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:30:49 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/08 15:54:15 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/09 18:08:15 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,5 +117,6 @@ void			print_dong(t_sim *sim, t_coder *cod);
 void			print_comp(t_sim *sim, t_coder *cod);
 void			print_debug(t_sim *sim, t_coder *cod);
 void			print_refactor(t_sim *sim, t_coder *cod);
+void			print_burn(t_sim *sim, t_coder *cod);
 
 #endif

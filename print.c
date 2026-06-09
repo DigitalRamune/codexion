@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 13:21:39 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/08 16:00:50 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/09 17:53:26 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,9 @@ void	print_comp(t_sim *sim, t_coder *cod)
 		cod->last_compile.tv_usec = tv.tv_usec;
 		pthread_mutex_unlock(&cod->m_comp);
 		usleep(sleep_time);
+		pthread_mutex_lock(&cod->m_comp);
 		cod->compilations += 1;
+		pthread_mutex_unlock(&cod->m_comp);
 	}
 }
 
@@ -80,4 +82,16 @@ void	print_refactor(t_sim *sim, t_coder *cod)
 		pthread_mutex_unlock(&sim->m_print);
 		usleep(sleep_time);
 	}
+}
+
+void	print_burn(t_sim *sim, t_coder *cod)
+{
+	struct timeval	tv;
+	long			diff_ms;
+
+	gettimeofday(&tv, NULL);
+	diff_ms = ((tv.tv_sec - sim->start.tv_sec) * 1000L) + ((tv.tv_usec - sim->start.tv_usec) / 1000L);
+	pthread_mutex_lock(&sim->m_print);
+	printf("%ld %d burned out\n", diff_ms, cod->id);
+	pthread_mutex_unlock(&sim->m_print);
 }
