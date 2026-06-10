@@ -6,7 +6,7 @@
 /*   By: inaciri < inaciri@student.42mulhouse.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 15:09:30 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/10 20:44:20 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/10 21:00:37 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,6 @@ int	main(int argc, char **argv)
 		return (0);
 	if (!add_all_dongle(&sim))
 		return (0);
+	ft_codexion(&sim);
+	return (0);
 }
