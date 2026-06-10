@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dongle_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
+/*   By: inaciri < inaciri@student.42mulhouse.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 13:09:54 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/08 13:09:56 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/10 20:53:39 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ void    dongle_liberation(t_sim *sim, t_dongle *dong)
 {
     struct timeval  tv;
 
+    (void)sim;
     pthread_mutex_lock(&dong->m_dongle);
     dong->is_used = 0;
     gettimeofday(&tv, NULL);

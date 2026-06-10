@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
+/*   By: inaciri < inaciri@student.42mulhouse.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 15:09:30 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/08 13:13:01 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/10 20:44:20 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,33 @@ void	print_struct(struct P_arg *param)
 
 void	ft_codexion(t_sim *sim)
 {
-	
+	pthread_t	*thread_cod;
+	pthread_t	monitor_thread;
+	int			i;
+
+	i = 0;
+	thread_cod = malloc((sim->param->nbr_of_coders + 1) * sizeof(pthread_t));
+	if (!thread_cod)
+	{
+		thread_cod = NULL;
+		return ;
+	}
+	add_all_coders(sim);
+	while (i < sim->param->nbr_of_coders)
+	{
+		pthread_create(&thread_cod[i], NULL, &cod_main, &sim->coders_tab[i]);
+		i++;
+	}
+	pthread_create(&monitor_thread, NULL, &ft_monitor, sim);
+	i = 0;
+	while(i < sim->param->nbr_of_coders)
+	{
+		pthread_join(thread_cod[i], NULL);
+		i++;
+	}
+	pthread_join(monitor_thread, NULL);
+	free_tab(sim);
+	free(thread_cod);
 }
 
 int	main(int argc, char **argv)

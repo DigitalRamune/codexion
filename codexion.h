@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   codexion.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
+/*   By: inaciri < inaciri@student.42mulhouse.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:30:49 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/09 18:08:15 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/10 20:43:40 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,4 +119,7 @@ void			print_debug(t_sim *sim, t_coder *cod);
 void			print_refactor(t_sim *sim, t_coder *cod);
 void			print_burn(t_sim *sim, t_coder *cod);
 
+void			*cod_main(void *arg);
+void			*ft_monitor(void *arg);
+void			free_tab(t_sim *sim);
 #endif

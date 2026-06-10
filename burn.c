@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   burn.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
+/*   By: inaciri < inaciri@student.42mulhouse.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 17:39:25 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/10 17:48:11 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/10 18:54:20 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ int	detect_burn(t_sim *sim, t_coder *cod)
 	deadline = timeval_add(cod->last_compile, burn_conv);
 	pthread_mutex_unlock(&cod->m_comp);
 	if (!timeval_compare(tv, deadline))
-		return (0);
-	return (1);
+		return (1);
+	return (0);
 }
 
 int	burn_loop(t_sim *sim, t_coder *cod)

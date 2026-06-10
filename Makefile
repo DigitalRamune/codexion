@@ -6,13 +6,13 @@
 #    By: inaciri < inaciri@student.42mulhouse.fr    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/04/20 14:22:45 by inaciri           #+#    #+#              #
-#    Updated: 2026/06/06 15:48:47 by inaciri          ###   ########.fr        #
+#    Updated: 2026/06/10 20:52:41 by inaciri          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -pthread
 
 SRCS = main.c \
 		parse.c \
@@ -22,6 +22,10 @@ SRCS = main.c \
 		time.c \
 		coders.c \
 		edge_case.c \
+		burn.c \
+		dongle_utils.c \
+		free.c \
+		print.c
 
 OBJS := ${SRCS:.c=.o}
 

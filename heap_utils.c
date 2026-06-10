@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heap_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
+/*   By: inaciri < inaciri@student.42mulhouse.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 17:11:54 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/03 15:54:20 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/10 18:53:45 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	ft_compare(t_sim *simulation, t_request req1, t_request req2)
 		{
 			if (req1.request_time.tv_usec > req2.request_time.tv_usec)
 				return (1);
-			else if (req1.request_time.tv_usec == req2.request_time.tv_sec)
+			else if (req1.request_time.tv_usec == req2.request_time.tv_usec)
 			{
 				if (req1.id > req2.id)
 					return (1);
@@ -189,7 +189,7 @@ t_request check_min(t_dongle *dongle)
 {
 	t_request error_req;
 
-	if (dongle->heap > 0)
+	if (dongle->in_heap > 0)
 		return (dongle->heap[0]);
 	error_req.id = -1;
 	return (error_req);

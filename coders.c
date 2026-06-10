@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   coders.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
+/*   By: inaciri < inaciri@student.42mulhouse.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/05 18:14:11 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/09 17:37:34 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/10 20:06:36 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,18 @@ void	add_all_coders(t_sim *sim)
 	}
 }
 
-void	cod_main(t_sim *sim, t_coder *cod)
+void	*cod_main(void *arg)
 {
+	t_coder *cod;
+	t_sim	*sim;
+
+	cod = (t_coder *)arg;
+	sim = cod->simulation;
 	if (cod->left == cod->right)
 	{
 		while(!sim->stop_flag)
 			usleep(1000);
+		return NULL;
 	}
 	while (cod->compilations < sim->param->required_compiles && !sim->stop_flag)
 	{
@@ -79,4 +85,5 @@ void	cod_main(t_sim *sim, t_coder *cod)
 		print_debug(sim, cod);
 		print_refactor(sim, cod);
 	}
+	return NULL;
 }
