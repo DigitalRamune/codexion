@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 17:39:25 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/10 14:06:44 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/10 17:48:11 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,13 @@ int	check_burn_end(t_sim *sim)
 	return (0);
 }
 
-void	ft_monitor(t_sim *sim)
+void	*ft_monitor(void *arg)
 {
 	int	burn_result;
 	int	i;
-
+	t_sim	*sim;
+	
+	sim = (t_sim *)arg;
 	i = 0;
 	while (!sim->stop_flag)
 	{
@@ -114,4 +116,5 @@ void	ft_monitor(t_sim *sim)
 		}
 		usleep(1000);
 	}
+	return NULL;
 }
