@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 17:39:25 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/09 18:08:39 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/10 14:06:44 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	detect_burn(t_sim *sim, t_coder *cod)
 
 	gettimeofday(&tv, NULL);
 	burn_conv.tv_sec = sim->param->time_to_burn / 1000;
-	burn_conv.tv_usec = (sim->param->time_to_burn % 1000) * 1000; 
+	burn_conv.tv_usec = (sim->param->time_to_burn % 1000) * 1000;
 	pthread_mutex_lock(&cod->m_comp);
 	deadline = timeval_add(cod->last_compile, burn_conv);
 	pthread_mutex_unlock(&cod->m_comp);
@@ -31,19 +31,23 @@ int	detect_burn(t_sim *sim, t_coder *cod)
 
 int	burn_loop(t_sim *sim, t_coder *cod)
 {
+	int	i;
+
+	i = 0;
 	if (!detect_burn(sim, cod))
 	{
-		pthread_mutex_lock(&sim->m_print);
 		print_burn(sim, cod);
-		pthread_mutex_unlock(&sim->m_print);
 		pthread_mutex_lock(&sim->m_flag);
 		sim->stop_flag = 1;
 		pthread_mutex_unlock(&sim->m_flag);
-		pthread_cond_broadcast(&cod->left->cond_dongle);
-		pthread_cond_broadcast(&cod->right->cond_dongle);
-		return (0);
+		while (i < sim->param->nbr_of_coders)
+		{
+			pthread_cond_broadcast(&sim->dongle_tab[i].cond_dongle);
+			i++;
+		}
+		return (1);
 	}
-	return (1);
+	return (0);
 }
 
 int	detect_end(t_sim *sim, t_coder *cod)
@@ -54,23 +58,60 @@ int	detect_end(t_sim *sim, t_coder *cod)
 	comp_nbr = cod->compilations;
 	pthread_mutex_unlock(&cod->m_comp);
 	if (comp_nbr == sim->param->required_compiles)
-		return (0);
-	return (1);
+		return (1);
+	return (0);
 }
 
 int	check_burn_end(t_sim *sim)
 {
 	int	i;
+	int	burn;
+	int	reached_max_compile;
 
+	reached_max_compile = 0;
+	burn = 0;
 	i = 0;
 	while (i < sim->param->nbr_of_coders)
 	{
-		if (!burn_loop(sim, &sim->coders_tab[i]))
-			return (0);
+		if (burn ==1)
+			break ;
+		else if (burn_loop(sim, &sim->coders_tab[i]))
+			burn = 1;
 		if (detect_end(sim, &sim->coders_tab[i]))
-			i++;
-		else
-			return (-1);
+			reached_max_compile += 1;
+		i++;
 	}
-	return (1);
+	if (reached_max_compile == sim->param->nbr_of_coders)
+		return (1);
+	if (burn == 1)
+		return (2);
+	return (0);
+}
+
+void	ft_monitor(t_sim *sim)
+{
+	int	burn_result;
+	int	i;
+
+	i = 0;
+	while (!sim->stop_flag)
+	{
+		burn_result = check_burn_end(sim);
+		if (burn_result == 1 || burn_result == 2)
+		{
+			pthread_mutex_lock(&sim->m_flag);
+			sim->stop_flag = 1;
+			pthread_mutex_unlock(&sim->m_flag);
+			if (burn_result == 1)
+			{
+				while (i < sim->param->nbr_of_coders)
+				{
+					pthread_cond_broadcast(&sim->dongle_tab[i].cond_dongle);
+					i++;
+				}
+			}
+			break;
+		}
+		usleep(1000);
+	}
 }
