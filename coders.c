@@ -6,7 +6,7 @@
 /*   By: inaciri < inaciri@student.42mulhouse.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/05 18:14:11 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/10 20:06:36 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/10 21:17:26 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,27 @@ void	request_both_dongle(t_sim *sim, t_coder *cod)
 {
 	if (cod->left == cod->right)
 		return ;
-	dongle_acquisition(cod->left, cod, sim);
-	if (!sim->stop_flag)
-		print_dong(sim, cod);
-	dongle_acquisition(cod->right, cod, sim);
-	if (!sim->stop_flag)
-		print_dong(sim, cod);
+        
+	// Les coders pairs commencent par la DROITE
+	if (cod->id % 2 == 0)
+	{
+		dongle_acquisition(cod->right, cod, sim);
+		if (!sim->stop_flag)
+			print_dong(sim, cod);
+		dongle_acquisition(cod->left, cod, sim);
+		if (!sim->stop_flag)
+			print_dong(sim, cod);
+	}
+	// Les coders impairs commencent par la GAUCHE
+	else
+	{
+		dongle_acquisition(cod->left, cod, sim);
+		if (!sim->stop_flag)
+			print_dong(sim, cod);
+		dongle_acquisition(cod->right, cod, sim);
+		if (!sim->stop_flag)
+			print_dong(sim, cod);
+	}
 }
 
 void	liberate_both_dongle(t_sim *sim, t_coder *cod)

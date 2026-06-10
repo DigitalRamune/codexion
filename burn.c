@@ -6,7 +6,7 @@
 /*   By: inaciri < inaciri@student.42mulhouse.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 17:39:25 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/10 18:54:20 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/10 21:26:30 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	detect_end(t_sim *sim, t_coder *cod)
 	pthread_mutex_lock(&cod->m_comp);
 	comp_nbr = cod->compilations;
 	pthread_mutex_unlock(&cod->m_comp);
-	if (comp_nbr == sim->param->required_compiles)
+	if (comp_nbr >= sim->param->required_compiles)
 		return (1);
 	return (0);
 }
@@ -75,10 +75,10 @@ int	check_burn_end(t_sim *sim)
 	{
 		if (burn ==1)
 			break ;
-		else if (burn_loop(sim, &sim->coders_tab[i]))
-			burn = 1;
 		if (detect_end(sim, &sim->coders_tab[i]))
 			reached_max_compile += 1;
+		else if (burn_loop(sim, &sim->coders_tab[i]))
+			burn = 1;
 		i++;
 	}
 	if (reached_max_compile == sim->param->nbr_of_coders)
