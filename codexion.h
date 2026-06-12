@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   codexion.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inaciri < inaciri@student.42mulhouse.fr    +#+  +:+       +#+        */
+/*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:30:49 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/10 20:43:40 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/12 11:44:49 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,7 @@ int				timeval_compare(struct timeval a, struct timeval b);
 struct timeval	timeval_add(struct timeval a, struct timeval b);
 
 int				one_coder(t_sim *sim);
+int				check_stop_flag(t_sim *sim);
 
 int				is_min(t_dongle *dong, t_coder *cod);
 int				cond_check(t_dongle *dong, t_coder *cod);

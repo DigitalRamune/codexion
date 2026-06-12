@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 13:21:39 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/09 17:53:26 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/12 11:46:25 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	print_comp(t_sim *sim, t_coder *cod)
 	long			sleep_time;
 	
 	sleep_time = sim->param->time_to_compile * 1000L;
-	if (!sim->stop_flag)
+	if (!check_stop_flag(sim))
 	{
 		gettimeofday(&tv, NULL);
 		diff_ms = ((tv.tv_sec - sim->start.tv_sec) * 1000L) + ((tv.tv_usec - sim->start.tv_usec) / 1000L);
@@ -54,7 +54,7 @@ void	print_debug(t_sim *sim, t_coder *cod)
 	struct timeval	tv;
 	long			diff_ms;
 	long			sleep_time;
-	if (!sim->stop_flag)
+	if (!check_stop_flag(sim))
 	{
 		sleep_time = sim->param->time_to_debug * 1000L;
 		gettimeofday(&tv, NULL);
@@ -72,7 +72,7 @@ void	print_refactor(t_sim *sim, t_coder *cod)
 	long			diff_ms;
 	long			sleep_time;
 
-	if (!sim->stop_flag)
+	if (!check_stop_flag(sim))
 	{
 		sleep_time = sim->param->time_to_refactor * 1000L;
 		gettimeofday(&tv, NULL);

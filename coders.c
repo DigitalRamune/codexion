@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   coders.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inaciri < inaciri@student.42mulhouse.fr    +#+  +:+       +#+        */
+/*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/05 18:14:11 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/10 21:17:26 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/12 11:47:42 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,20 +21,20 @@ void	request_both_dongle(t_sim *sim, t_coder *cod)
 	if (cod->id % 2 == 0)
 	{
 		dongle_acquisition(cod->right, cod, sim);
-		if (!sim->stop_flag)
+		if (!check_stop_flag(sim))
 			print_dong(sim, cod);
 		dongle_acquisition(cod->left, cod, sim);
-		if (!sim->stop_flag)
+		if (!check_stop_flag(sim))
 			print_dong(sim, cod);
 	}
 	// Les coders impairs commencent par la GAUCHE
 	else
 	{
 		dongle_acquisition(cod->left, cod, sim);
-		if (!sim->stop_flag)
+		if (!check_stop_flag(sim))
 			print_dong(sim, cod);
 		dongle_acquisition(cod->right, cod, sim);
-		if (!sim->stop_flag)
+		if (!check_stop_flag(sim))
 			print_dong(sim, cod);
 	}
 }
@@ -88,11 +88,11 @@ void	*cod_main(void *arg)
 	sim = cod->simulation;
 	if (cod->left == cod->right)
 	{
-		while(!sim->stop_flag)
+		while(!check_stop_flag(sim))
 			usleep(1000);
 		return NULL;
 	}
-	while (cod->compilations < sim->param->required_compiles && !sim->stop_flag)
+	while (cod->compilations < sim->param->required_compiles && !check_stop_flag(sim))
 	{
 		request_both_dongle(sim, cod);
 		print_comp(sim, cod);

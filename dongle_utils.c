@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dongle_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inaciri < inaciri@student.42mulhouse.fr    +#+  +:+       +#+        */
+/*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 13:09:54 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/10 21:08:17 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/12 11:48:22 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,15 @@ void    dongle_acquisition(t_dongle *dong, t_coder *cod, t_sim *sim)
 
     pthread_mutex_lock(&dong->m_dongle);
     heap_insert(sim, dong, cod);
-    while(!cond_check(dong, cod) && !sim->stop_flag)
+    while(!cond_check(dong, cod) && !check_stop_flag(sim))
         pthread_cond_wait(&dong->cond_dongle, &dong->m_dongle);
-    if (!sim->stop_flag)
+    if (!check_stop_flag(sim))
     {
         heap_extract(sim, dong);
         dong->is_used = 1;
     }
     pthread_mutex_unlock(&dong->m_dongle);
-    if (!sim->stop_flag)
+    if (!check_stop_flag(sim))
     {
         cooldown_end.tv_sec = dong->released_at.tv_sec + dong->cooldown.tv_sec;
         cooldown_end.tv_usec = dong->released_at.tv_usec + dong->cooldown.tv_usec;

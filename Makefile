@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: inaciri < inaciri@student.42mulhouse.fr    +#+  +:+       +#+         #
+#    By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/04/20 14:22:45 by inaciri           #+#    #+#              #
-#    Updated: 2026/06/10 20:52:41 by inaciri          ###   ########.fr        #
+#    Updated: 2026/06/12 11:51:13 by inaciri          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 

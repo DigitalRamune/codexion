@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   burn.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inaciri < inaciri@student.42mulhouse.fr    +#+  +:+       +#+        */
+/*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 17:39:25 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/10 21:26:30 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/12 11:49:04 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void	*ft_monitor(void *arg)
 	
 	sim = (t_sim *)arg;
 	i = 0;
-	while (!sim->stop_flag)
+	while (!check_stop_flag(sim))
 	{
 		burn_result = check_burn_end(sim);
 		if (burn_result == 1 || burn_result == 2)
