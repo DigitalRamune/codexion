@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:30:49 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/12 11:44:49 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/16 16:30:24 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,8 @@ int				fill_struct(int argc, char **argv, t_arg *param);
 
 int				ft_edf_compare(t_request req1, t_request req2);
 int				ft_compare(t_sim *simulation, t_request req1, t_request req2);
-void			heap_bubble_up(t_sim *simulation, t_dongle *dongle, t_request new_req);
+void			heap_bubble_up(t_sim *simulation,
+					t_dongle *dongle, t_request new_req);
 t_request		heap_bubble_down(t_sim *simulation, t_dongle *dongle);
 void			heap_insert(t_sim *sim, t_dongle *dong, t_coder *cod);
 t_request		heap_extract(t_sim *sim, t_dongle *dongle);
@@ -111,6 +112,7 @@ int				check_stop_flag(t_sim *sim);
 
 int				is_min(t_dongle *dong, t_coder *cod);
 int				cond_check(t_dongle *dong, t_coder *cod);
+void			handle_cooldown(t_dongle *dong);
 void			dongle_acquisition(t_dongle *dong, t_coder *cod, t_sim *sim);
 void			dongle_liberation(t_sim *sim, t_dongle *dong);
 

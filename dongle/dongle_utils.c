@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 13:09:54 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/16 15:23:05 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/16 16:22:54 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,22 @@ int	cond_check(t_dongle *dong, t_coder *cod)
 	return (0);
 }
 
-void	dongle_acquisition(t_dongle *dong, t_coder *cod, t_sim *sim)
+void	handle_cooldown(t_dongle *dong)
 {
 	struct timeval	tv;
-	struct timeval	cooldown_end;
+	struct timeval	c_end;
 	long			wait_time;
 
+	c_end = timeval_add(dong->released_at, dong->cooldown);
+	gettimeofday(&tv, NULL);
+	wait_time = ((c_end.tv_sec - tv.tv_sec) * 1000000L)
+		+ (c_end.tv_usec - tv.tv_usec);
+	if (wait_time > 0)
+		usleep(wait_time);
+}
+
+void	dongle_acquisition(t_dongle *dong, t_coder *cod, t_sim *sim)
+{
 	pthread_mutex_lock(&dong->m_dongle);
 	heap_insert(sim, dong, cod);
 	while (!cond_check(dong, cod) && !check_stop_flag(sim))
@@ -49,19 +59,7 @@ void	dongle_acquisition(t_dongle *dong, t_coder *cod, t_sim *sim)
 	}
 	pthread_mutex_unlock(&dong->m_dongle);
 	if (!check_stop_flag(sim))
-	{
-		cooldown_end.tv_sec = dong->released_at.tv_sec + dong->cooldown.tv_sec;
-		cooldown_end.tv_usec = dong->released_at.tv_usec + dong->cooldown.tv_usec;
-		if (cooldown_end.tv_usec >= 1000000)
-		{
-			cooldown_end.tv_usec -= 1000000;
-			cooldown_end.tv_sec += 1;
-		}
-		gettimeofday(&tv, NULL);
-		wait_time = ((cooldown_end.tv_sec - tv.tv_sec) * 1000000L) + (cooldown_end.tv_usec - tv.tv_usec);
-		if (wait_time > 0)
-			usleep(wait_time);
-	}
+		handle_cooldown(dong);
 }
 
 void	dongle_liberation(t_sim *sim, t_dongle *dong)

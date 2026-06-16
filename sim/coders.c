@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/05 18:14:11 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/16 15:23:38 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/16 16:29:26 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,8 @@ void	*cod_main(void *arg)
 			usleep(1000);
 		return (NULL);
 	}
-	while (cod->compilations < sim->param->required_compiles && !check_stop_flag(sim))
+	while (cod->compilations < sim->param->required_compiles
+		&& !check_stop_flag(sim))
 	{
 		request_both_dongle(sim, cod);
 		print_comp(sim, cod);

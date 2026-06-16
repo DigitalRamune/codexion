@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 17:11:54 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/16 15:23:53 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/16 16:27:36 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ void	heap_bubble_up(t_sim *simulation, t_dongle *dongle, t_request new_req)
 	dongle->heap[dongle->in_heap] = new_req;
 	dongle->in_heap += 1;
 	parent_index = (kid_index - 1) / 2;
-	while (ft_compare(simulation, dongle->heap[parent_index], dongle->heap[kid_index]) && kid_index != 0)
+	while (ft_compare(simulation, dongle->heap[parent_index],
+			dongle->heap[kid_index]) && kid_index != 0)
 	{
 		temp = dongle->heap[parent_index];
 		dongle->heap[parent_index] = dongle->heap[kid_index];

@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 16:01:11 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/16 15:23:43 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/16 16:28:41 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 int	init_dongle_tab(t_sim *sim)
 {
-	sim->dongle_tab = malloc((sim->param->nbr_of_coders + 1) * sizeof(t_dongle));
+	sim->dongle_tab = malloc((sim->param->nbr_of_coders + 1)
+			* sizeof(t_dongle));
 	if (!sim->dongle_tab)
 	{
 		sim->dongle_tab = NULL;
