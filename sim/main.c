@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inaciri < inaciri@student.42mulhouse.fr    +#+  +:+       +#+        */
+/*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 15:09:30 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/10 21:00:37 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/16 15:23:40 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "codexion.h"
+#include "../lib/codexion.h"
 
 void	print_struct(struct P_arg *param)
 {
@@ -45,7 +45,7 @@ void	ft_codexion(t_sim *sim)
 	}
 	pthread_create(&monitor_thread, NULL, &ft_monitor, sim);
 	i = 0;
-	while(i < sim->param->nbr_of_coders)
+	while (i < sim->param->nbr_of_coders)
 	{
 		pthread_join(thread_cod[i], NULL);
 		i++;

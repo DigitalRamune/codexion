@@ -6,11 +6,11 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 18:34:02 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/03 15:52:43 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/16 15:23:55 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "codexion.h"
+#include "../lib/codexion.h"
 
 void	argument_names(char **arg_tab)
 {

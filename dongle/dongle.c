@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   dongle.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inaciri < inaciri@student.42mulhouse.fr    +#+  +:+       +#+        */
+/*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 16:22:41 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/06 16:53:07 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/16 15:23:31 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "codexion.h"
+#include "../lib/codexion.h"
 
 void	cooldown_convert(t_dongle *dongle, t_sim *sim)
 {
-	struct timeval cooldown_conv;
-	
+	struct timeval	cooldown_conv;
+
 	cooldown_conv.tv_sec = sim->param->dongle_cooldown / 1000;
 	cooldown_conv.tv_usec = (sim->param->dongle_cooldown % 1000) * 1000;
 	dongle->cooldown.tv_sec = cooldown_conv.tv_sec;
@@ -44,9 +44,10 @@ int	init_dongle(t_dongle *dongle, t_sim *sim)
 	dongle->released_at.tv_usec = 0;
 	cooldown_convert(dongle, sim);
 	if (!init_dongle_heap(dongle))
-		return(0);
+		return (0);
 	return (1);
 }
+
 int	add_all_dongle(t_sim *sim)
 {
 	int	i;

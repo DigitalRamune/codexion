@@ -6,11 +6,11 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 13:21:39 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/12 11:46:25 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/16 15:23:57 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "codexion.h"
+#include "../lib/codexion.h"
 
 void	print_dong(t_sim *sim, t_coder *cod)
 {
@@ -29,7 +29,7 @@ void	print_comp(t_sim *sim, t_coder *cod)
 	struct timeval	tv;
 	long			diff_ms;
 	long			sleep_time;
-	
+
 	sleep_time = sim->param->time_to_compile * 1000L;
 	if (!check_stop_flag(sim))
 	{
@@ -54,6 +54,7 @@ void	print_debug(t_sim *sim, t_coder *cod)
 	struct timeval	tv;
 	long			diff_ms;
 	long			sleep_time;
+
 	if (!check_stop_flag(sim))
 	{
 		sleep_time = sim->param->time_to_debug * 1000L;

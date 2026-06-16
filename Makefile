@@ -6,7 +6,7 @@
 #    By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/04/20 14:22:45 by inaciri           #+#    #+#              #
-#    Updated: 2026/06/16 13:07:15 by inaciri          ###   ########.fr        #
+#    Updated: 2026/06/16 15:20:52 by inaciri          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,18 +14,18 @@ CC = cc
 
 CFLAGS = -Wall -Wextra -Werror -pthread
 
-SRCS = main.c \
-		parse.c \
-		heap_utils.c \
-		simulation.c \
-		dongle.c \
-		time.c \
-		coders.c \
-		edge_case.c \
-		burn.c \
-		dongle_utils.c \
-		free.c \
-		print.c
+SRCS = sim/main.c \
+		utils/parse.c \
+		utils/heap_utils.c \
+		sim/simulation.c \
+		dongle/dongle.c \
+		utils/time.c \
+		sim/coders.c \
+		utils/edge_case.c \
+		utils/burn.c \
+		dongle/dongle_utils.c \
+		utils/free.c \
+		utils/print.c
 
 OBJS := ${SRCS:.c=.o}
 

@@ -6,11 +6,11 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/05 18:02:58 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/05 18:08:50 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/16 15:24:06 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "codexion.h"
+#include "../lib/codexion.h"
 
 struct timeval	timeval_add(struct timeval a, struct timeval b)
 {
@@ -19,10 +19,10 @@ struct timeval	timeval_add(struct timeval a, struct timeval b)
 	result.tv_sec = a.tv_sec + b.tv_sec;
 	result.tv_usec = a.tv_usec + b.tv_usec;
 	if (result.tv_usec >= 1000000)
-		{
-			result.tv_usec -= 1000000;
-			result.tv_sec += 1;
-		}
+	{
+		result.tv_usec -= 1000000;
+		result.tv_sec += 1;
+	}
 	return (result);
 }
 

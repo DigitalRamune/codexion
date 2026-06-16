@@ -6,11 +6,11 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 16:01:11 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/03 18:25:54 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/16 15:23:43 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "codexion.h"
+#include "../lib/codexion.h"
 
 int	init_dongle_tab(t_sim *sim)
 {
@@ -23,7 +23,7 @@ int	init_dongle_tab(t_sim *sim)
 	return (1);
 }
 
-int init_coders_tab(t_sim *sim)
+int	init_coders_tab(t_sim *sim)
 {
 	sim->coders_tab = malloc((sim->param->nbr_of_coders + 1) * sizeof(t_coder));
 	if (!sim->coders_tab)

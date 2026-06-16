@@ -6,11 +6,11 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/05 18:36:52 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/12 11:44:21 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/16 15:23:48 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "codexion.h"
+#include "../lib/codexion.h"
 
 int	one_coder(t_sim *sim)
 {
@@ -19,12 +19,12 @@ int	one_coder(t_sim *sim)
 	return (1);
 }
 
-int check_stop_flag(t_sim *sim)
+int	check_stop_flag(t_sim *sim)
 {
-    int flag;
+	int	flag;
 
-    pthread_mutex_lock(&sim->m_flag);
-    flag = sim->stop_flag;
-    pthread_mutex_unlock(&sim->m_flag);
-    return (flag);
+	pthread_mutex_lock(&sim->m_flag);
+	flag = sim->stop_flag;
+	pthread_mutex_unlock(&sim->m_flag);
+	return (flag);
 }

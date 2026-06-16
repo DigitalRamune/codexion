@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   heap_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inaciri < inaciri@student.42mulhouse.fr    +#+  +:+       +#+        */
+/*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 17:11:54 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/10 18:53:45 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/16 15:23:53 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "codexion.h"
+#include "../lib/codexion.h"
 
 int	ft_edf_compare(t_request req1, t_request req2)
 {
@@ -66,7 +66,7 @@ void	heap_bubble_up(t_sim *simulation, t_dongle *dongle, t_request new_req)
 	int			parent_index;
 	int			kid_index;
 	t_request	temp;
-	
+
 	if (dongle->in_heap >= dongle->max_coders)
 		return ;
 	kid_index = dongle->in_heap;
@@ -151,7 +151,7 @@ void	heap_insert(t_sim *sim, t_dongle *dong, t_coder *cod)
 	struct timeval	tv;
 	struct timeval	burn_conv;
 	struct timeval	deadline;
-	
+
 	if (dong->in_heap < dong->max_coders)
 	{
 		gettimeofday(&tv, NULL);
@@ -173,21 +173,21 @@ void	heap_insert(t_sim *sim, t_dongle *dong, t_coder *cod)
 	}
 }
 
-t_request heap_extract(t_sim *sim, t_dongle *dongle)
+t_request	heap_extract(t_sim *sim, t_dongle *dongle)
 {
-	t_request error_req;
-	
+	t_request	error_req;
+
 	if (dongle->in_heap <= 0)
-		{
-			error_req.id = -1;
-			return (error_req);		
-		}
+	{
+		error_req.id = -1;
+		return (error_req);		
+	}
 	return (heap_bubble_down(sim, dongle));
 }
 
-t_request check_min(t_dongle *dongle)
+t_request	check_min(t_dongle *dongle)
 {
-	t_request error_req;
+	t_request	error_req;
 
 	if (dongle->in_heap > 0)
 		return (dongle->heap[0]);

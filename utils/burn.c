@@ -6,11 +6,11 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 17:39:25 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/12 11:49:04 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/16 15:23:46 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "codexion.h"
+#include "../lib/codexion.h"
 
 int	detect_burn(t_sim *sim, t_coder *cod)
 {
@@ -73,7 +73,7 @@ int	check_burn_end(t_sim *sim)
 	i = 0;
 	while (i < sim->param->nbr_of_coders)
 	{
-		if (burn ==1)
+		if (burn == 1)
 			break ;
 		if (detect_end(sim, &sim->coders_tab[i]))
 			reached_max_compile += 1;
@@ -90,10 +90,10 @@ int	check_burn_end(t_sim *sim)
 
 void	*ft_monitor(void *arg)
 {
-	int	burn_result;
-	int	i;
+	int		burn_result;
+	int		i;
 	t_sim	*sim;
-	
+
 	sim = (t_sim *)arg;
 	i = 0;
 	while (!check_stop_flag(sim))
@@ -112,9 +112,9 @@ void	*ft_monitor(void *arg)
 					i++;
 				}
 			}
-			break;
+			break ;
 		}
 		usleep(1000);
 	}
-	return NULL;
+	return (NULL);
 }

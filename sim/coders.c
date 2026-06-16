@@ -6,18 +6,16 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/05 18:14:11 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/12 11:47:42 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/16 15:23:38 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "codexion.h"
+#include "../lib/codexion.h"
 
 void	request_both_dongle(t_sim *sim, t_coder *cod)
 {
 	if (cod->left == cod->right)
 		return ;
-        
-	// Les coders pairs commencent par la DROITE
 	if (cod->id % 2 == 0)
 	{
 		dongle_acquisition(cod->right, cod, sim);
@@ -27,7 +25,6 @@ void	request_both_dongle(t_sim *sim, t_coder *cod)
 		if (!check_stop_flag(sim))
 			print_dong(sim, cod);
 	}
-	// Les coders impairs commencent par la GAUCHE
 	else
 	{
 		dongle_acquisition(cod->left, cod, sim);
@@ -62,7 +59,7 @@ void	init_coder(t_coder *cod, t_sim *sim, int id)
 	}
 	else
 	{
-		cod->left =  &sim->dongle_tab[id - 1];
+		cod->left = &sim->dongle_tab[id - 1];
 		cod->right = &sim->dongle_tab[id];
 	}
 }
@@ -81,16 +78,16 @@ void	add_all_coders(t_sim *sim)
 
 void	*cod_main(void *arg)
 {
-	t_coder *cod;
+	t_coder	*cod;
 	t_sim	*sim;
 
 	cod = (t_coder *)arg;
 	sim = cod->simulation;
 	if (cod->left == cod->right)
 	{
-		while(!check_stop_flag(sim))
+		while (!check_stop_flag(sim))
 			usleep(1000);
-		return NULL;
+		return (NULL);
 	}
 	while (cod->compilations < sim->param->required_compiles && !check_stop_flag(sim))
 	{
@@ -100,5 +97,5 @@ void	*cod_main(void *arg)
 		print_debug(sim, cod);
 		print_refactor(sim, cod);
 	}
-	return NULL;
+	return (NULL);
 }
