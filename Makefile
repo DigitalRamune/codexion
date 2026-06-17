@@ -6,7 +6,7 @@
 #    By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/04/20 14:22:45 by inaciri           #+#    #+#              #
-#    Updated: 2026/06/16 15:20:52 by inaciri          ###   ########.fr        #
+#    Updated: 2026/06/17 14:25:56 by inaciri          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ CFLAGS = -Wall -Wextra -Werror -pthread
 
 SRCS = sim/main.c \
 		utils/parse.c \
+		utils/heap_utils_2.c \
 		utils/heap_utils.c \
 		sim/simulation.c \
 		dongle/dongle.c \
@@ -23,6 +24,7 @@ SRCS = sim/main.c \
 		sim/coders.c \
 		utils/edge_case.c \
 		utils/burn.c \
+		sim/monitor.c \
 		dongle/dongle_utils.c \
 		utils/free.c \
 		utils/print.c

@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 15:09:30 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/16 15:23:40 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/17 14:17:32 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,21 @@ void	print_struct(struct P_arg *param)
 	printf("%d\n", (*param).required_compiles);
 	printf("%d\n", (*param).dongle_cooldown);
 	printf("%s\n", (*param).scheduler);
+}
+
+static void	join_and_free(t_sim *sim, pthread_t *t_cod, pthread_t t_mon)
+{
+	int	i;
+
+	i = 0;
+	while (i < sim->param->nbr_of_coders)
+	{
+		pthread_join(t_cod[i], NULL);
+		i++;
+	}
+	pthread_join(t_mon, NULL);
+	free_tab(sim);
+	free(t_cod);
 }
 
 void	ft_codexion(t_sim *sim)
@@ -44,15 +59,7 @@ void	ft_codexion(t_sim *sim)
 		i++;
 	}
 	pthread_create(&monitor_thread, NULL, &ft_monitor, sim);
-	i = 0;
-	while (i < sim->param->nbr_of_coders)
-	{
-		pthread_join(thread_cod[i], NULL);
-		i++;
-	}
-	pthread_join(monitor_thread, NULL);
-	free_tab(sim);
-	free(thread_cod);
+	join_and_free(sim, thread_cod, monitor_thread);
 }
 
 int	main(int argc, char **argv)

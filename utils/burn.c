@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 17:39:25 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/16 15:23:46 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/17 14:21:20 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,35 +86,4 @@ int	check_burn_end(t_sim *sim)
 	if (burn == 1)
 		return (2);
 	return (0);
-}
-
-void	*ft_monitor(void *arg)
-{
-	int		burn_result;
-	int		i;
-	t_sim	*sim;
-
-	sim = (t_sim *)arg;
-	i = 0;
-	while (!check_stop_flag(sim))
-	{
-		burn_result = check_burn_end(sim);
-		if (burn_result == 1 || burn_result == 2)
-		{
-			pthread_mutex_lock(&sim->m_flag);
-			sim->stop_flag = 1;
-			pthread_mutex_unlock(&sim->m_flag);
-			if (burn_result == 1)
-			{
-				while (i < sim->param->nbr_of_coders)
-				{
-					pthread_cond_broadcast(&sim->dongle_tab[i].cond_dongle);
-					i++;
-				}
-			}
-			break ;
-		}
-		usleep(1000);
-	}
-	return (NULL);
 }
