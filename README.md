@@ -3,197 +3,88 @@
 # Codexion
 
 ## Description
+**Codexion** is a C project that explores advanced multithreading, concurrency, and shared resource management. Inspired by the classic Dining Philosophers problem, this project simulates a group of developers (coders) sitting around a table who must share a limited number of USB drives (dongles) to compile, debug, and refactor their code. 
 
-A-Maze-ing is a maze generator and solver written in Python 3. It takes a configuration file as input, generates a maze using the recursive backtracker algorithm, solves it using BFS, and outputs both a hex-encoded file and an interactive terminal visualization. The maze always contains a visible "42" pixel art pattern and supports perfect maze generation (exactly one path between entry and exit).
+The goal of the project is to build a robust, thread-safe simulation that efficiently allocates limited resources without triggering deadlocks or starvation. It features dynamic resource scheduling using a Min-Heap priority queue, allowing the system to operate under two distinct strategies: **FIFO** (First In, First Out) and **EDF** (Earliest Deadline First).
 
 ## Instructions
 
-### Requirements
-
-- Python 3.10 or later
-- pip
-
-### Installation
+### Compilation
+The project uses a standard `Makefile`. Run the following commands in the root of the repository:
 
 ```bash
-# Install the mazegen package
-make install
+make        # Compiles the 'codexion' executable
+make clean  # Removes object files (.o)
+make fclean # Removes object files and the executable
+make re     # Fully recompiles the project
 
-# Or install dependencies manually
-pip install dist/mazegen-1.0.0-py3-none-any.whl
 ```
 
-### Running
+### Execution
+
+The simulation requires 8 mandatory arguments:
 
 ```bash
-make run
-# or
-python3 a_maze_ing.py config.txt
+./codexion [coders] [time_to_burn] [compile] [debug] [refactor] [quota] [cooldown] [scheduler]
+
 ```
 
-### Other commands
+**Arguments:**
+
+1. `number of coders`: Number of developers (and dongles).
+2. `time to burn`: Time (in ms) a developer can wait without compiling before making a "burnout" (dying).
+3. `time to compile`: Time (in ms) spent compiling (requires acquiring 2 adjacent dongles).
+4. `time to debug`: Time (in ms) spent debugging after releasing dongles.
+5. `time to refactor`: Time (in ms) spent refactoring the code.
+6. `number of required compilations`: Quota of compilations each coder must reach for the simulation to end successfully.
+7. `dongle cooldown`: Time (in ms) a dongle remains unusable after being released.
+8. `scheduler`: The queue scheduling strategy (`fifo` or `edf`).
+
+**Example:**
 
 ```bash
-make debug    		# run with Python debugger
-make lint     		# run flake8 and mypy
-make lint-strict	# run flake8 and mypy --strict
-make clean    		# remove cache and build artifacts
-make build    		# rebuild the mazegen package from sources
-```
-
-### Interactive menu
-
-Once the maze is displayed, you can:
-
-1. Re-generate a new maze
-2. Show/Hide the shortest path from entry to exit
-3. Cycle wall colours
-4. Quit
-
-## Configuration file
-
-The configuration file uses one `KEY=VALUE` pair per line. Lines starting with `#` are treated as comments and ignored. Keys are case-insensitive.
-
-| Key | Description | Example |
-|-----|-------------|---------|
-| `WIDTH` | Maze width in cells (integer) | `WIDTH=20` |
-| `HEIGHT` | Maze height in cells (integer) | `HEIGHT=15` |
-| `ENTRY` | Entry coordinates x,y | `ENTRY=0,0` |
-| `EXIT` | Exit coordinates x,y | `EXIT=19,14` |
-| `OUTPUT_FILE` | Output filename | `OUTPUT_FILE=maze.txt` |
-| `PERFECT` | Perfect maze? (`True` or `False`) | `PERFECT=True` |
-| `SEED` | Optional integer seed for reproducibility | `SEED=42` |
-
-Example config file:
+./codexion 4 430 200 0 0 5 10 fifo
 
 ```
-# A-Maze-ing configuration
-WIDTH=20
-HEIGHT=15
-ENTRY=0,0
-EXIT=19,14
-OUTPUT_FILE=maze.txt
-PERFECT=True
-SEED=42
-```
-
-## Maze generation algorithm
-
-This project uses the **recursive backtracker** (also known as depth-first search maze generation).
-
-### How it works
-
-1. Start at a given cell, mark it as visited
-2. Pick a random unvisited neighbour, carve a passage to it, mark it visited
-3. Repeat from the new cell
-4. When a cell has no unvisited neighbours, backtrack to the previous cell
-5. Continue until all cells are visited
-
-An explicit stack is used instead of Python recursion to avoid hitting the recursion limit on large mazes.
-
-### Why we chose this algorithm
-
-The recursive backtracker produces mazes with long winding corridors and few dead ends, which makes them visually interesting and satisfying to solve. It also naturally guarantees full connectivity (every cell is reachable) and wall coherence (both sides of every wall are always carved together). When `PERFECT=False`, a small number of extra passages are added via `_add_loops()` to create additional paths.
-
-## Reusable module — mazegen
-
-The maze generator is packaged as a standalone pip-installable module.
-
-### Installation
-
-```bash
-pip install mazegen-1.0.0-py3-none-any.whl
-```
-
-### Basic usage
-
-```python
-from mazegen import MazeGenerator
-
-# Create a 20x15 perfect maze starting at (0, 0) with a fixed seed
-mg = MazeGenerator(sys.argv[1])
-mg.set_config()
-
-# Access the grid — list of lists of integers (hex wall encoding)
-grid = mg.grid
-
-# Access the "42" pattern cells — list of (x, y) tuples
-pattern_cells = mg.pattern_cell
-```
-
-### Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `width` | int | Maze width in cells |
-| `height` | int | Maze height in cells |
-| `start_x` | int | Starting cell x coordinate |
-| `start_y` | int | Starting cell y coordinate |
-| `perfect` | bool | If True, generates a perfect maze (no loops) |
-| `seed` | int or None | Random seed for reproducibility |
-
-### Accessing the grid
-
-`mg.grid` is a list of lists where each value is a 4-bit integer encoding the walls of that cell:
-
-| Bit | Direction | Value |
-|-----|-----------|-------|
-| 0 (LSB) | North | 1 |
-| 1 | East | 2 |
-| 2 | South | 4 |
-| 3 | West | 8 |
-
-A bit set to `1` means the wall is closed, `0` means open. Example: `0xF` (15) means all 4 walls are closed.
-
-### Rebuilding the package
-
-```bash
-# In a virtual environment
-python -m pip install build
-python -m build
-# Output will be in dist/
-```
-
-## Team and project management
-
-### Roles
-
-- **nappasam** — maze generator (`maze_generator.py`), solver (`maze_generator.py`), output writer (`maze_generator.py`)
-- **inaciri** — config parser (`maze_generator.py`), interactive menu (`menu.py`)
-
-Both team members helped each other across modules when needed — roles were a guide, not a strict boundary.
-
-### Planning
-
-We approached the project logically by building it layer by layer: first the config parser to establish a solid foundation, then the maze generator, then the output writer to verify results visually, then the solver, and finally the terminal UI. This incremental approach made it easy to test each piece before moving on.
-
-### What worked well
-
-The incremental layer-by-layer approach worked very well — having a working foundation at each step made debugging much easier. Communication via Discord when we couldn't meet in person kept things moving smoothly.
-
-### What could be improved
-
-Getting a solid understanding of BFS and DFS took more time than expected. In hindsight, spending more time upfront studying the algorithms before starting to code would have saved time overall.
-
-### Tools used
-
-- **Editor**: VS Code
-- **Communication**: Discord and in-person meetings
-- **Version control**: Git
 
 ## Resources
 
-- [W3Schools Python](https://www.w3schools.com) — quick reference for Python syntax
-- [GeeksForGeeks](https://www.geeksforgeeks.org) — algorithm explanations and examples
-- YouTube — video explanations of BFS, DFS, and maze generation algorithms
-- Python official documentation — `random` module, type hints, packaging
+* **Documentation & Articles:**
+* [POSIX Threads Programming (LLNL)](https://www.google.com/search?q=https://computing.llnl.gov/tutorials/pthreads/)
+* [Dining Philosophers Problem & Coffman's Conditions](https://en.wikipedia.org/wiki/Dining_philosophers_problem)
+* [Earliest Deadline First Scheduling](https://en.wikipedia.org/wiki/Earliest_deadline_first_scheduling)
 
-### AI usage
 
-Claude (Anthropic) was used to:
-- Work out the logic behind BFS (solver) and DFS (recursive backtracker generator)
-- Help debug and reason through error handling in the config parser
-- Guide the structure of the pip package (`pyproject.toml`, package layout)
-- Review code for correctness and edge cases
+* **AI Usage:**
+* AI (Gemini) was used during the development of this project as an interactive tutor and debugging assistant. Specifically, it was used to:
+* Refine the mathematical logic behind the Min-Heap priority queue for the EDF and FIFO schedulers.
+* Analyze and resolve complex deadlock scenarios and starvation edge cases (e.g., odd-numbered coder configurations).
+* Interpret `ThreadSanitizer` reports to locate and patch subtle Data Races.
+* Refactor specific functions to comply with the strict 42 *Norminette* constraints (line limits and variable counts) without losing readability.
 
-All AI-generated explanations and suggestions were reviewed, understood, and implemented by the team members themselves.
+
+
+
+
+## Blocking cases handled
+
+To ensure the simulation runs flawlessly, several critical concurrency issues were addressed:
+
+* **Deadlock prevention and Coffman’s conditions:** To break the "circular wait" condition (one of Coffman's conditions for deadlock), a strict resource acquisition hierarchy is enforced. Even-ID coders must request their right dongle first, while odd-ID coders must request their left dongle first. This guarantees that at least one coder will always be able to pick up both dongles, preventing the entire table from freezing.
+* **Starvation prevention:** A Min-Heap priority queue is implemented within each dongle. Coders do not randomly grab dongles; they insert their requests into the heap. Depending on the chosen scheduler, the dongle is granted strictly to the coder who requested it first (FIFO) or the coder closest to burnout (EDF), ensuring no one is permanently bypassed.
+* **Cooldown handling:** Dongles must cool down after use. This is handled by a precise timestamp check upon acquisition. If a coder is granted a dongle but the cooldown period hasn't elapsed, the thread will accurately calculate the remaining time and `usleep` for that specific duration before attempting to use it.
+* **Precise burnout detection:** A dedicated Monitor thread continuously loops over all coders, calculating the difference between the current time and their `last_compile` timestamp. If this difference exceeds `time_to_burn`, the monitor instantly sets a global stop flag and halts the simulation to print the death message accurately.
+* **Log serialization:** Multiple threads attempting to print to the standard output simultaneously can result in interlaced or corrupted text. A dedicated `m_print` mutex locks the printing function, ensuring that timestamps and state changes are printed sequentially and coherently.
+
+## Thread synchronization mechanisms
+
+The architecture relies entirely on POSIX threading primitives to coordinate access to shared resources safely:
+
+* **`pthread_mutex_t`:** Mutexes are deployed to protect every shared variable from Data Races.
+* `m_dongle` protects the dongle's state (whether it is used, its cooldown timestamp) and its internal Min-Heap array.
+* `m_flag` securely wraps the global `stop_flag`. No thread reads or writes this flag without locking the mutex (e.g., via the `check_stop_flag` getter), preventing the monitor and coders from conflicting during a shutdown.
+* `m_comp` protects individual coder states (`compilations` count and `last_compile` timestamp) so the Monitor can read them safely while the coder thread is updating them.
+
+
+* **`pthread_cond_t`:** Condition variables (`cond_dongle`) are used for passive synchronization, saving CPU cycles compared to aggressive spinlocks. When a coder needs a dongle but is not yet the highest priority in the heap (or the dongle is in use), they call `pthread_cond_wait`.
+* **Thread-safe communication:** When a coder finishes compiling and releases a dongle, they unlock `m_dongle` and immediately trigger `pthread_cond_broadcast`. This sends a signal to all asleep threads waiting for that specific dongle. The waiting threads wake up, re-lock the mutex, and check their condition (via `cond_check`) to see if they are now the highest priority in the Min-Heap. Furthermore, if the Monitor detects a burnout or completion, it sets the `stop_flag` and broadcasts to all dongle condition variables to immediately wake up any sleeping coders so they can gracefully exit their routines.
