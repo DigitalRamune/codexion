@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:30:49 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/17 14:23:43 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/23 15:28:14 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,12 +116,14 @@ void			handle_cooldown(t_dongle *dong);
 void			dongle_acquisition(t_dongle *dong, t_coder *cod, t_sim *sim);
 void			dongle_liberation(t_sim *sim, t_dongle *dong);
 
+void			precise_sleep(long microsec);
 void			print_dong(t_sim *sim, t_coder *cod);
 void			print_comp(t_sim *sim, t_coder *cod);
 void			print_debug(t_sim *sim, t_coder *cod);
 void			print_refactor(t_sim *sim, t_coder *cod);
 void			print_burn(t_sim *sim, t_coder *cod);
 
+void			coder_think(t_sim *sim);
 int				detect_burn(t_sim *sim, t_coder *cod);
 int				burn_loop(t_sim *sim, t_coder *cod);
 int				detect_end(t_sim *sim, t_coder *cod);
@@ -130,4 +132,5 @@ int				check_burn_end(t_sim *sim);
 void			*cod_main(void *arg);
 void			*ft_monitor(void *arg);
 void			free_tab(t_sim *sim);
+
 #endif

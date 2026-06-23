@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/05 18:14:11 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/16 16:29:26 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/23 15:27:52 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,9 +86,11 @@ void	*cod_main(void *arg)
 	if (cod->left == cod->right)
 	{
 		while (!check_stop_flag(sim))
-			usleep(1000);
+			precise_sleep(1000);
 		return (NULL);
 	}
+	if (cod->id % 2 != 0)
+		precise_sleep(sim->param->time_to_compile * 500L);
 	while (cod->compilations < sim->param->required_compiles
 		&& !check_stop_flag(sim))
 	{
@@ -97,6 +99,7 @@ void	*cod_main(void *arg)
 		liberate_both_dongle(sim, cod);
 		print_debug(sim, cod);
 		print_refactor(sim, cod);
+		coder_think(sim);
 	}
 	return (NULL);
 }

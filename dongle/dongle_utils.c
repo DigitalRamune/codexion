@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 13:09:54 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/16 16:22:54 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/23 15:28:39 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,19 @@ void	handle_cooldown(t_dongle *dong)
 {
 	struct timeval	tv;
 	struct timeval	c_end;
-	long			wait_time;
+	long			wait;
 
 	c_end = timeval_add(dong->released_at, dong->cooldown);
-	gettimeofday(&tv, NULL);
-	wait_time = ((c_end.tv_sec - tv.tv_sec) * 1000000L)
-		+ (c_end.tv_usec - tv.tv_usec);
-	if (wait_time > 0)
-		usleep(wait_time);
+	while (1)
+	{
+		gettimeofday(&tv, NULL);
+		wait = ((c_end.tv_sec - tv.tv_sec) * 1000000L)
+			+ (c_end.tv_usec - tv.tv_usec);
+		if (wait <= 0)
+			break ;
+		if (wait > 2000)
+			precise_sleep(wait / 2);
+	}
 }
 
 void	dongle_acquisition(t_dongle *dong, t_coder *cod, t_sim *sim)

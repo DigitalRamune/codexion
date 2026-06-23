@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/17 14:19:31 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/17 14:21:04 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/23 15:19:58 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	*ft_monitor(void *arg)
 			trigger_stop(sim, res);
 			break ;
 		}
-		usleep(1000);
+		precise_sleep(1000);
 	}
 	return (NULL);
 }

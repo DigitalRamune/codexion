@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 13:21:39 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/16 16:26:47 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/23 15:01:14 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	print_comp(t_sim *sim, t_coder *cod)
 		cod->last_compile.tv_sec = tv.tv_sec;
 		cod->last_compile.tv_usec = tv.tv_usec;
 		pthread_mutex_unlock(&cod->m_comp);
-		usleep(sleep_time);
+		precise_sleep(sleep_time);
 		pthread_mutex_lock(&cod->m_comp);
 		cod->compilations += 1;
 		pthread_mutex_unlock(&cod->m_comp);
@@ -66,7 +66,7 @@ void	print_debug(t_sim *sim, t_coder *cod)
 		pthread_mutex_lock(&sim->m_print);
 		printf("%ld %d is debugging\n", diff_ms, cod->id);
 		pthread_mutex_unlock(&sim->m_print);
-		usleep(sleep_time);
+		precise_sleep(sleep_time);
 	}
 }
 
@@ -85,7 +85,7 @@ void	print_refactor(t_sim *sim, t_coder *cod)
 		pthread_mutex_lock(&sim->m_print);
 		printf("%ld %d is refactoring\n", diff_ms, cod->id);
 		pthread_mutex_unlock(&sim->m_print);
-		usleep(sleep_time);
+		precise_sleep(sleep_time);
 	}
 }
 
