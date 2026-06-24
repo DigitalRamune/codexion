@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 15:09:30 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/17 14:17:32 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/24 14:13:10 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,25 @@ static void	join_and_free(t_sim *sim, pthread_t *t_cod, pthread_t t_mon)
 	free(t_cod);
 }
 
+void	set_start_time(t_sim *sim)
+{
+	struct timeval	tv;
+	int				i;
+
+	i = 0;
+	gettimeofday(&tv, NULL);
+	sim->start.tv_sec = tv.tv_sec;
+	sim->start.tv_usec = tv.tv_usec;
+	while (i < sim->param->nbr_of_coders)
+	{
+		sim->coders_tab[i].last_compile = sim->start;
+		i++;
+	}
+	pthread_mutex_lock(&sim->m_print);
+	sim->start_sync = 1;
+	pthread_mutex_unlock(&sim->m_print);
+}
+
 void	ft_codexion(t_sim *sim)
 {
 	pthread_t	*thread_cod;
@@ -58,6 +77,7 @@ void	ft_codexion(t_sim *sim)
 		pthread_create(&thread_cod[i], NULL, &cod_main, &sim->coders_tab[i]);
 		i++;
 	}
+	set_start_time(sim);
 	pthread_create(&monitor_thread, NULL, &ft_monitor, sim);
 	join_and_free(sim, thread_cod, monitor_thread);
 }

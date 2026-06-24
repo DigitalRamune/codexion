@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/17 14:19:31 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/23 15:19:58 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/24 14:23:25 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@ static void	broadcast_all(t_sim *sim)
 	i = 0;
 	while (i < sim->param->nbr_of_coders)
 	{
+		pthread_mutex_lock(&sim->dongle_tab[i].m_dongle);
 		pthread_cond_broadcast(&sim->dongle_tab[i].cond_dongle);
+		pthread_mutex_unlock(&sim->dongle_tab[i].m_dongle);
 		i++;
 	}
 }
@@ -47,7 +49,7 @@ void	*ft_monitor(void *arg)
 			trigger_stop(sim, res);
 			break ;
 		}
-		precise_sleep(1000);
+		precise_sleep(5000);
 	}
 	return (NULL);
 }

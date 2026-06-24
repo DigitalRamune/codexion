@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:30:49 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/23 15:28:14 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/24 14:18:04 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct P_arg
 typedef struct S_sim
 {
 	int				stop_flag;
+	int				start_sync;
 	pthread_mutex_t	m_flag;
 	pthread_mutex_t	m_print;
 	struct timeval	start;
@@ -106,6 +107,7 @@ void			add_all_coders(t_sim *sim);
 
 int				timeval_compare(struct timeval a, struct timeval b);
 struct timeval	timeval_add(struct timeval a, struct timeval b);
+void			wait_until_start(t_sim *sim);
 
 int				one_coder(t_sim *sim);
 int				check_stop_flag(t_sim *sim);

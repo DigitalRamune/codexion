@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 16:01:11 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/16 16:28:41 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/24 13:22:44 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ int	init_simulation(t_sim *sim, t_arg *arg)
 	sim->start.tv_sec = tv.tv_sec;
 	sim->start.tv_usec = tv.tv_usec;
 	sim->param = arg;
+	sim->start_sync = 0;
 	if (!init_dongle_tab(sim) || !init_coders_tab(sim))
 		return (0);
 	return (1);

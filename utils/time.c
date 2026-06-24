@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/05 18:02:58 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/23 15:28:54 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/24 15:01:05 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,5 +71,19 @@ void	coder_think(t_sim *sim)
 		if (think_time < 0)
 			think_time = 0;
 		precise_sleep((think_time * 1000L) + 5000L);
+	}
+}
+
+void	wait_until_start(t_sim *sim)
+{
+	int	start;
+
+	start = 0;
+	while (start == 0)
+	{
+		pthread_mutex_lock(&sim->m_print);
+		start = sim->start_sync;
+		pthread_mutex_unlock(&sim->m_print);
+		usleep(1000);
 	}
 }

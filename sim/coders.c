@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/05 18:14:11 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/23 15:27:52 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/24 14:18:19 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ void	*cod_main(void *arg)
 
 	cod = (t_coder *)arg;
 	sim = cod->simulation;
+	wait_until_start(sim);
 	if (cod->left == cod->right)
 	{
 		while (!check_stop_flag(sim))

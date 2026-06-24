@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 17:39:25 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/17 14:21:20 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/24 14:26:13 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,9 @@ int	burn_loop(t_sim *sim, t_coder *cod)
 		pthread_mutex_unlock(&sim->m_flag);
 		while (i < sim->param->nbr_of_coders)
 		{
+			pthread_mutex_lock(&sim->dongle_tab[i].m_dongle);
 			pthread_cond_broadcast(&sim->dongle_tab[i].cond_dongle);
+			pthread_mutex_unlock(&sim->dongle_tab[i].m_dongle);
 			i++;
 		}
 		return (1);
