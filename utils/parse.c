@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 18:34:02 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/23 16:38:54 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/24 12:24:22 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,55 +39,53 @@ int	error_return(int z, char *arg_name)
 	return (0);
 }
 
-int isnum(char **str)
+int	isnum(char **str)
 {
-    int i;
-    int j;
+	int	i;
+	int	j;
 
-    i = 1;
-    j = 0;
-    while (i < 8)
-    {
-        while (str[i][j])
-        {
-            if (str[i][j] < '0' || str[i][j] > '9')
-                return (0);
-            j++;
-        }
-        i++;
+	i = 1;
+	j = 0;
+	while (i < 8)
+	{
+		while (str[i][j])
+		{
+			if (str[i][j] < '0' || str[i][j] > '9')
+				return (0);
+			j++;
+		}
+		i++;
 		j = 0;
-    }
-    return (1);
+	}
+	return (1);
 }
 
-
-int    valid_data(int *data, int argc, char **argv)
+int	valid_data(int *data, int argc, char **argv)
 {
-    int        i;
-    char    *arg_name[8];
+	int		i;
+	char	*arg_name[8];
 
-    argument_names(arg_name);
-    i = 0;
-    if (argc < 9 || argc > 9 || !isnum(argv))
-        return (error_return(0, NULL));
-    
-    while (i < 7)
-    {
-        data[i] = atoi(argv[i + 1]);
-        if (data[i] < 0)
-            return (error_return(1, arg_name[i]));
-        i++;
-    }
-    if (!strcmp(argv[8], "FIFO") || !strcmp(argv[8], "fifo"))
-        data[i] = 0;
-    else if (!strcmp(argv[8], "EDF") || !strcmp(argv[8], "edf"))
-        data[i] = 1;
-    else
-    {
-        printf("Invalid %s\n", arg_name[i]);
-        return (0);
-    }
-    return (1);
+	argument_names(arg_name);
+	i = 0;
+	if (argc < 9 || argc > 9 || !isnum(argv))
+		return (error_return(0, NULL));
+	while (i < 7)
+	{
+		data[i] = atoi(argv[i + 1]);
+		if (data[i] < 0)
+			return (error_return(1, arg_name[i]));
+		i++;
+	}
+	if (!strcmp(argv[8], "FIFO") || !strcmp(argv[8], "fifo"))
+		data[i] = 0;
+	else if (!strcmp(argv[8], "EDF") || !strcmp(argv[8], "edf"))
+		data[i] = 1;
+	else
+	{
+		printf("Invalid %s\n", arg_name[i]);
+		return (0);
+	}
+	return (1);
 }
 
 int	fill_struct(int argc, char **argv, t_arg *param)
