@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:30:49 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/25 16:31:04 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/25 17:53:02 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ t_request		check_min(t_dongle *dongle);
 int				init_dongle_tab(t_sim *sim);
 int				init_coders_tab(t_sim *sim);
 int				init_simulation(t_sim *sim, t_arg *arg);
+long			ft_atol(char *str);
 
 void			cooldown_convert(t_dongle *dongle, t_sim *sim);
 int				init_dongle_heap(t_dongle *dongle);

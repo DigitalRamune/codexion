@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 13:09:54 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/23 15:28:39 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/25 18:05:07 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,9 @@ void	handle_cooldown(t_dongle *dong)
 	struct timeval	c_end;
 	long			wait;
 
+	pthread_mutex_lock(&dong->m_dongle);
 	c_end = timeval_add(dong->released_at, dong->cooldown);
+	pthread_mutex_unlock(&dong->m_dongle);
 	while (1)
 	{
 		gettimeofday(&tv, NULL);
