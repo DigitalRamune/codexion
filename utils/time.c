@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/05 18:02:58 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/24 15:01:05 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/25 16:17:05 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ void	coder_think(t_sim *sim)
 
 	if (sim->param->nbr_of_coders % 2 != 0)
 	{
-		think_time = sim->param->time_to_compile - sim->param->time_to_debug
-			- sim->param->time_to_refactor;
+		think_time = sim->param->time_to_compile + sim->param->dongle_cooldown
+			- sim->param->time_to_debug - sim->param->time_to_refactor;
 		if (think_time < 0)
 			think_time = 0;
 		precise_sleep((think_time * 1000L) + 5000L);

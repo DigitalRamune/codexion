@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 16:22:41 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/16 15:23:31 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/25 16:32:16 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ int	add_all_dongle(t_sim *sim)
 	{
 		if (!init_dongle(&sim->dongle_tab[i], sim))
 			return (0);
+		sim->dongle_tab[i].id = i;
 		i++;
 	}
 	return (1);

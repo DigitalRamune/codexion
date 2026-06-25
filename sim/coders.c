@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/05 18:14:11 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/24 14:18:19 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/25 16:33:52 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	request_both_dongle(t_sim *sim, t_coder *cod)
 {
 	if (cod->left == cod->right)
 		return ;
-	if (cod->id % 2 == 0)
+	if (cod->left->id > cod->right->id)
 	{
 		dongle_acquisition(cod->right, cod, sim);
 		if (!check_stop_flag(sim))

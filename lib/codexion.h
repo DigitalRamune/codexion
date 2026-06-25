@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 14:30:49 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/25 16:04:27 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/25 16:31:04 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ typedef struct D_dongle
 	int					is_used;
 	t_request			*heap;
 	int					in_heap;
+	int					id;
 	int					max_coders;
 	struct timeval		cooldown;
 	struct timeval		released_at;
