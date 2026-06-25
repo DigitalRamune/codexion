@@ -6,7 +6,7 @@
 /*   By: inaciri <inaciri@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 18:34:02 by inaciri           #+#    #+#             */
-/*   Updated: 2026/06/24 12:24:22 by inaciri          ###   ########.fr       */
+/*   Updated: 2026/06/25 14:44:33 by inaciri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	valid_data(int *data, int argc, char **argv)
 	while (i < 7)
 	{
 		data[i] = atoi(argv[i + 1]);
-		if (data[i] < 0)
+		if (data[i] < 0 || data[0] > 201)
 			return (error_return(1, arg_name[i]));
 		i++;
 	}
